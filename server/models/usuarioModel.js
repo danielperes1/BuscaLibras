@@ -39,5 +39,27 @@ module.exports = {
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
         const [resultado] = await db.execute(query, [nome, telefone, data_de_nascimento, estado, cidade, pergunta_rec_senha, resposta_rec_senha, foto, id_usuario])
         return resultado.insertId
+    },
+
+    // Conta quantos usuarios existem com o perfil informado
+    contarPorPerfil: async (perfil) => {
+        const query = 'SELECT COUNT(*) AS total FROM usuarios WHERE perfil = ?'
+        const [linhas] = await db.execute(query, [perfil])
+        return linhas[0].total
+    },
+
+    // Lista profissionais e solicitantes com os dados exibidos na dashboard do admin
+    listarUsuariosCompletos: async () => {
+        const query = `
+            SELECT u.id, u.email, u.perfil, u.status, u.data_cadastro,
+                   COALESCE(p.nome, s.nome) AS nome,
+                   p.area_de_atuacao
+            FROM usuarios u
+            LEFT JOIN profissional p ON p.id_usuario = u.id
+            LEFT JOIN solicitante s ON s.id_usuario = u.id
+            WHERE u.perfil != 'administrador'
+            ORDER BY u.data_cadastro DESC`
+        const [linhas] = await db.execute(query)
+        return linhas
     }
 }

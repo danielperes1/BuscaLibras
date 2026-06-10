@@ -9,10 +9,9 @@
     <!-- Navegação central -->
     <nav class="header-nav">
       <% if (usuario && usuario.perfil === 'administrador') { %>
-        <a href="/admin/dashboard" class="nav-link">Home</a>
+        <a href="/usuarios" class="nav-link <%= typeof paginaAtual !== 'undefined' && paginaAtual === 'usuarios' ? 'active' : '' %>">Home</a>
         <a href="/profissionais" class="nav-link">Profissionais</a>
         <a href="/solicitantes" class="nav-link">Solicitantes</a>
-        <a href="/meu-perfil" class="nav-link">Meu Perfil</a>
       <% } else if (usuario && usuario.perfil === 'profissional') { %>
         <a href="/dashboard/inicio" class="nav-link">Home</a>
         <a href="/meu-perfil" class="nav-link">Meu Perfil</a>

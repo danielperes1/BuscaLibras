@@ -20,7 +20,9 @@ create table usuarios(
 id int auto_increment primary key,
 email varchar(100),
 senha varchar(255),
-perfil ENUM('administrador', 'solicitante', 'profissional')
+perfil ENUM('administrador', 'solicitante', 'profissional'),
+status ENUM('ativo', 'inativo') DEFAULT 'ativo',
+data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Tabela usuarios

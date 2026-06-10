@@ -40,6 +40,42 @@ module.exports = {
         res.redirect("/login")
     },
 
+    // DASHBOARD DO ADMIN - lista os usuarios do sistema com seus dados
+    dashboard: async (req, res) => {
+        try {
+            const totalProfissionais = await usuarioModel.contarPorPerfil('profissional')
+            const totalSolicitantes = await usuarioModel.contarPorPerfil('solicitante')
+            const usuariosBrutos = await usuarioModel.listarUsuariosCompletos()
+
+            const usuarios = usuariosBrutos.map(user => {
+                const nome = user.nome || user.email
+                const partesNome = nome.trim().split(/\s+/)
+                const iniciais = (partesNome[0][0] + (partesNome[1]?.[0] || '')).toUpperCase()
+
+                return {
+                    ...user,
+                    nome,
+                    iniciais,
+                    tipoLabel: user.perfil === 'profissional' ? user.area_de_atuacao : 'Solicitante',
+                    perfilLabel: user.perfil === 'profissional' ? 'Profissional' : 'Solicitante',
+                    statusLabel: user.status === 'inativo' ? 'Inativo' : 'Ativo',
+                    dataCadastroFormatada: new Date(user.data_cadastro).toLocaleDateString('pt-BR')
+                }
+            })
+
+            res.render('admin/dashboard', {
+                totalUsuarios: totalProfissionais + totalSolicitantes,
+                totalProfissionais,
+                totalSolicitantes,
+                usuarios,
+                paginaAtual: 'usuarios'
+            })
+        } catch (erro) {
+            console.error(erro)
+            res.status(500).json({ mensagem: "Erro ao carregar a dashboard" })
+        }
+    },
+
     cadastrar: async (req, res) => {
         try {
             const { nome, email, senha, perfil, telefone, data_de_nascimento, pergunta_rec_senha, resposta_rec_senha, area_de_atuacao, estado, cidade } = req.body

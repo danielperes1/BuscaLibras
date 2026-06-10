@@ -1,11 +1,98 @@
 <%- include('../partials/head', { titulo: 'Dashboard Admin' }) %>
 
+<% const coresAvatar = ['#b39ddb', '#dce775', '#ffab91', '#9fa8da', '#f48fb1', '#80cbc4', '#ffe082', '#90caf9'] %>
+
 <body class="page-sistema">
 
   <%- include('../partials/header') %>
 
   <main class="main-content">
-    <h1>Estou na dashboard do adm</h1>
+
+    <div class="dashboard-titulo">
+      <h1>Usuários</h1>
+      <p>Visualize e gerencie todos os usuários do sistema.</p>
+    </div>
+
+    <!-- CARDS DE RESUMO -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">
+          <img src="/img/icons/total-usuarios.svg" alt="">
+        </div>
+        <div class="stat-info">
+          <h3>Total de usuários</h3>
+          <span class="stat-numero"><%= totalUsuarios.toLocaleString('pt-BR') %></span>
+          <p>todos os usuários cadastrados no sistema</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">
+          <img src="/img/icons/profissionais.svg" alt="">
+        </div>
+        <div class="stat-info">
+          <h3>Profissionais</h3>
+          <span class="stat-numero"><%= totalProfissionais.toLocaleString('pt-BR') %></span>
+          <p>Usuários com o perfil profissional.</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">
+          <img src="/img/icons/solicitantes.svg" alt="">
+        </div>
+        <div class="stat-info">
+          <h3>Solicitante</h3>
+          <span class="stat-numero"><%= totalSolicitantes.toLocaleString('pt-BR') %></span>
+          <p>Usuários com o perfil solicitante.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABELA DE USUARIOS -->
+    <table class="tabela-usuarios">
+      <thead>
+        <tr>
+          <th>Usuário</th>
+          <th>tipo</th>
+          <th>email</th>
+          <th>data de cadastro</th>
+          <th>status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (usuarios && usuarios.length > 0) { %>
+          <% usuarios.forEach(function (user, i) { %>
+            <tr>
+              <td>
+                <div class="usuario-cell">
+                  <span class="avatar" style="background-color: <%= coresAvatar[i % coresAvatar.length] %>">
+                    <%= user.iniciais %>
+                  </span>
+                  <div>
+                    <div class="usuario-nome"><%= user.nome %></div>
+                    <div class="usuario-tipo-label"><%= user.tipoLabel %></div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <span class="badge badge--<%= user.perfil %>"><%= user.perfilLabel %></span>
+              </td>
+              <td><%= user.email %></td>
+              <td><%= user.dataCadastroFormatada %></td>
+              <td>
+                <span class="badge badge--status-<%= user.status %>"><%= user.statusLabel %></span>
+              </td>
+            </tr>
+          <% }) %>
+        <% } else { %>
+          <tr>
+            <td colspan="5" class="tabela-vazia">Nenhum usuário encontrado.</td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+
   </main>
 
 </body>

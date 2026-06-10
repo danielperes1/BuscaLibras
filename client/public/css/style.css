@@ -662,3 +662,165 @@ body {
   color: #2d2d2d;
   font-weight: 600;
 }
+
+/* ============================================================
+   DASHBOARD ADMIN - LISTA DE USUARIOS
+   ============================================================ */
+.dashboard-titulo h1 {
+  font-size: 28px;
+  color: #1a7a5e;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.dashboard-titulo p {
+  font-size: 14px;
+  color: #5fab9a;
+  font-weight: 500;
+  margin-bottom: 28px;
+}
+
+/* CARDS DE RESUMO */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border: 1px solid #e0eceb;
+  border-radius: 14px;
+  padding: 18px 20px;
+}
+
+.stat-icon {
+  flex-shrink: 0;
+  width: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stat-icon img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.stat-info h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #2d2d2d;
+  margin-bottom: 4px;
+}
+
+.stat-info .stat-numero {
+  display: block;
+  font-size: 26px;
+  font-weight: 700;
+  color: #1f1f1f;
+  margin-bottom: 4px;
+}
+
+.stat-info p {
+  font-size: 12px;
+  color: #8a9a98;
+}
+
+/* TABELA DE USUARIOS */
+.tabela-usuarios {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabela-usuarios thead th {
+  text-align: left;
+  font-size: 13px;
+  font-weight: 600;
+  color: #8a8a8a;
+  padding: 12px 10px;
+  border-bottom: 1px solid #ececec;
+}
+
+.tabela-usuarios tbody td {
+  padding: 14px 10px;
+  border-bottom: 1px solid #f1f1f1;
+  font-size: 14px;
+  color: #444;
+  vertical-align: middle;
+}
+
+.tabela-usuarios .tabela-vazia {
+  text-align: center;
+  padding: 30px;
+  color: #999;
+}
+
+.usuario-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: #2d2d2d;
+}
+
+.usuario-nome {
+  font-weight: 600;
+  color: #2d2d2d;
+}
+
+.usuario-tipo-label {
+  font-size: 12px;
+  color: #1a7a5e;
+}
+
+.badge {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge--profissional {
+  background: #c2f5c2;
+  color: #2e7d32;
+}
+
+.badge--solicitante {
+  background: #cfe6fb;
+  color: #2f6da3;
+}
+
+.badge--status-ativo {
+  background: #6fe06f;
+  color: #1f4a1f;
+}
+
+.badge--status-inativo {
+  background: #f5c2c2;
+  color: #7d2e2e;
+}
+
+@media (max-width: 900px) {
+  .tabela-usuarios {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
