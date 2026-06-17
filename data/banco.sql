@@ -126,6 +126,55 @@ VALUES
  'Intérprete de Libras', 'ES', 'Vitória', 
  'maria.jpg', LAST_INSERT_ID()
  );
+ 
+
+-- ============================================
+-- SOLICITANTES ADICIONAIS (senha: senha123)
+-- ============================================
+
+INSERT INTO usuarios (email, senha, perfil) VALUES
+('ana.solicitante@gmail.com', '$2a$10$Kaj9g7nXucU5clwZiiqo6uKjLJVG.cZM0sVgrRZkBXGhNpSfVp9/u', 'solicitante');
+INSERT INTO solicitante (nome, telefone, data_de_nascimento, estado, cidade, pergunta_rec_senha, resposta_rec_senha, foto, id_usuario)
+VALUES ('Ana Paula Ferreira', '(11) 98888-1111', '1993-02-18', 'SP', 'São Paulo', 'Qual o nome da sua mãe?', 'Clara', NULL, LAST_INSERT_ID());
+
+INSERT INTO usuarios (email, senha, perfil) VALUES
+('carlos.solicitante@gmail.com', '$2a$10$Kaj9g7nXucU5clwZiiqo6uKjLJVG.cZM0sVgrRZkBXGhNpSfVp9/u', 'solicitante');
+INSERT INTO solicitante (nome, telefone, data_de_nascimento, estado, cidade, pergunta_rec_senha, resposta_rec_senha, foto, id_usuario)
+VALUES ('Carlos Eduardo Souza', '(21) 97777-2222', '1990-11-05', 'RJ', 'Rio de Janeiro', 'Qual o nome do seu primeiro pet?', 'Bolinha', NULL, LAST_INSERT_ID());
+
+INSERT INTO usuarios (email, senha, perfil) VALUES
+('fernanda.solicitante@gmail.com', '$2a$10$Kaj9g7nXucU5clwZiiqo6uKjLJVG.cZM0sVgrRZkBXGhNpSfVp9/u', 'solicitante');
+INSERT INTO solicitante (nome, telefone, data_de_nascimento, estado, cidade, pergunta_rec_senha, resposta_rec_senha, foto, id_usuario)
+VALUES ('Fernanda Lima', '(31) 96666-3333', '1998-06-30', 'MG', 'Belo Horizonte', 'Qual o nome do jogador de futebol preferido?', 'Ronaldo', NULL, LAST_INSERT_ID());
+
+INSERT INTO usuarios (email, senha, perfil) VALUES
+('roberto.solicitante@gmail.com', '$2a$10$Kaj9g7nXucU5clwZiiqo6uKjLJVG.cZM0sVgrRZkBXGhNpSfVp9/u', 'solicitante');
+INSERT INTO solicitante (nome, telefone, data_de_nascimento, estado, cidade, pergunta_rec_senha, resposta_rec_senha, foto, id_usuario)
+VALUES ('Roberto Santos', '(71) 95555-4444', '1985-09-14', 'BA', 'Salvador', 'Qual o nome da sua mãe?', 'Lúcia', NULL, LAST_INSERT_ID());
+
+-- ============================================
+-- PROFISSIONAIS ADICIONAIS (senha: senha123)
+-- ============================================
+
+INSERT INTO usuarios (email, senha, perfil) VALUES
+('lucas.profissional@gmail.com', '$2a$10$Kaj9g7nXucU5clwZiiqo6uKjLJVG.cZM0sVgrRZkBXGhNpSfVp9/u', 'profissional');
+INSERT INTO profissional (nome, telefone, data_de_nascimento, pergunta_rec_senha, resposta_rec_senha, area_de_atuacao, estado, cidade, foto, id_usuario)
+VALUES ('Lucas Mendes', '(11) 94444-5555', '1992-03-22', 'Qual o nome do seu primeiro pet?', 'Totó', 'Intérprete de Libras', 'SP', 'São Paulo', NULL, LAST_INSERT_ID());
+
+INSERT INTO usuarios (email, senha, perfil) VALUES
+('juliana.profissional@gmail.com', '$2a$10$Kaj9g7nXucU5clwZiiqo6uKjLJVG.cZM0sVgrRZkBXGhNpSfVp9/u', 'profissional');
+INSERT INTO profissional (nome, telefone, data_de_nascimento, pergunta_rec_senha, resposta_rec_senha, area_de_atuacao, estado, cidade, foto, id_usuario)
+VALUES ('Juliana Costa', '(21) 93333-6666', '1987-08-10', 'Qual o nome da sua mãe?', 'Beatriz', 'Tradutor de Libras', 'RJ', 'Rio de Janeiro', NULL, LAST_INSERT_ID());
+
+INSERT INTO usuarios (email, senha, perfil) VALUES
+('marcos.profissional@gmail.com', '$2a$10$Kaj9g7nXucU5clwZiiqo6uKjLJVG.cZM0sVgrRZkBXGhNpSfVp9/u', 'profissional');
+INSERT INTO profissional (nome, telefone, data_de_nascimento, pergunta_rec_senha, resposta_rec_senha, area_de_atuacao, estado, cidade, foto, id_usuario)
+VALUES ('Marcos Alves', '(31) 92222-7777', '1994-12-01', 'Qual o nome do jogador de futebol preferido?', 'Pelé', 'Guia-Intérprete', 'MG', 'Belo Horizonte', NULL, LAST_INSERT_ID());
+
+INSERT INTO usuarios (email, senha, perfil) VALUES
+('patricia.profissional@gmail.com', '$2a$10$Kaj9g7nXucU5clwZiiqo6uKjLJVG.cZM0sVgrRZkBXGhNpSfVp9/u', 'profissional');
+INSERT INTO profissional (nome, telefone, data_de_nascimento, pergunta_rec_senha, resposta_rec_senha, area_de_atuacao, estado, cidade, foto, id_usuario)
+VALUES ('Patrícia Rocha', '(71) 91111-8888', '1989-05-17', 'Qual o nome da sua mãe?', 'Teresa', 'Instrutor de Libras', 'BA', 'Salvador', NULL, LAST_INSERT_ID());
 
 
 /*
