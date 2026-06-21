@@ -4,14 +4,16 @@
 
   <div class="container">
 
+    <!-- Logo do sistema -->
     <img src="/img/logo.png" alt="Busca Libras" class="logo">
 
+    <!-- Formulário de cadastro de solicitante -->
     <form action="/usuarios/cadastrar" method="POST" enctype="multipart/form-data">
       <input type="hidden" name="perfil" value="solicitante" />
 
       <div class="form-grid">
 
-        <!-- COLUNA 1: DADOS BÁSICOS -->
+        <!-- Coluna de dados básicos -->
         <div>
           <h2 class="column-title">Dados Básicos</h2>
 
@@ -48,7 +50,7 @@
           </div>
         </div>
 
-        <!-- COLUNA 2: LOCALIZAÇÃO + FOTO -->
+        <!-- Coluna de contato e foto -->
         <div>
           <h2 class="column-title">Contato</h2>
 
@@ -74,12 +76,11 @@
               <i class="fa-solid fa-camera"></i>
               <input type="file" name="foto" accept="image/*" onchange="previewFoto(this)" />
             </div>
-            <img id="foto-preview" src="/img/sem-foto.png" alt="Preview" class="foto-preview"
-              onerror="this.style.display='none'" />
+            <img id="foto-preview" src="/img/sem-foto.png" alt="Preview" class="foto-preview" onerror="this.style.display='none'" />
           </div>
         </div>
 
-        <!-- COLUNA 3: SEGURANÇA -->
+        <!-- Coluna de segurança -->
         <div>
           <h2 class="column-title">Segurança</h2>
 
@@ -134,6 +135,7 @@
   </div>
 
   <script>
+    // Função para gerar o preview da imagem selecionada antes do envio
     function previewFoto(input) {
       const preview = document.getElementById('foto-preview')
       if (input.files && input.files[0]) {

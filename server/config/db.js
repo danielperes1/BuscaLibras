@@ -1,18 +1,17 @@
-// importa o modulo mysql para conectar ao banco
-const mysql = require("mysql2/promise")
+// Importa o cliente MySQL com suporte a promessa
+const mysql = require('mysql2/promise')
 
-// Cria uma pool de conexao, varias conexoes de uma vez, para evitar erros no banco
+// Cria um pool de conexões para o banco de dados, permitindo reuso e melhor performance
 const pool = mysql.createPool({
-    host: process.env.DB_HOST, // Onde o banco esta hospedado
-    user: process.env.DB_USER, // Usuario que fará a conexão
-    password: process.env.DB_PASSWORD, // Senha do usuario
-    database: process.env.DB_NAME, // Banco ao qual deseja se conectar
-     // Se todas conexoes estiverem ocupadas, deixa o usuario esperando sem dar erro
-    waitForConnections: true, 
-    // Quantidade maxima de conexoes ao mesmo tempo
-    connectionLimit: 10, // Limite de conexoes ao mesmo tempo
-    queueLimit: 0 // Sem limite para filas de conexao    
+  host: process.env.DB_HOST, // Endereço do servidor MySQL
+  user: process.env.DB_USER, // Usuário de conexão
+  password: process.env.DB_PASSWORD, // Senha do usuário
+  database: process.env.DB_NAME, // Nome do banco de dados
+  waitForConnections: true, // Permite aguardar quando não há conexões disponíveis
+  connectionLimit: 10, // Número máximo de conexões simultâneas
+  queueLimit: 0 // Sem limite de fila para requisições esperando conexão
 })
 
-// Exporta as informacoes do banco, pros models utilizarem
-module.exports = pool;
+// Exporta o pool para ser usado em todo o projeto
+module.exports = pool
+

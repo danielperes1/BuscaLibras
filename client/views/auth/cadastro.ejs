@@ -2,14 +2,16 @@
 
 <body class="page-cadastro">
   <div class="container">
+    <!-- Logo do sistema no topo da página -->
     <img src="/img/logo.png" alt="Busca Libras" class="logo" />
 
+    <!-- Formulário de cadastro de profissional -->
     <form action="/usuarios/cadastrar" method="POST" enctype="multipart/form-data">
       <input type="hidden" name="perfil" value="profissional" />
 
       <div class="form-grid">
 
-        <!-- COLUNA 1 -->
+        <!-- Dados básicos do profissional -->
         <div>
           <h2 class="column-title">Dados Básicos</h2>
 
@@ -46,7 +48,7 @@
           </div>
         </div>
 
-        <!-- COLUNA 2 -->
+        <!-- Dados de contato -->
         <div>
           <h2 class="column-title">Contato</h2>
 
@@ -72,12 +74,11 @@
               <i class="fa-solid fa-camera"></i>
               <input type="file" name="foto" accept="image/*" onchange="previewFoto(this)" />
             </div>
-            <img id="foto-preview" src="/img/sem-foto.png" alt="Preview" class="foto-preview"
-              onerror="this.style.display='none'" />
+            <img id="foto-preview" src="/img/sem-foto.png" alt="Preview" class="foto-preview" onerror="this.style.display='none'" />
           </div>
         </div>
 
-        <!-- COLUNA 3 -->
+        <!-- Informações de segurança -->
         <div>
           <h2 class="column-title">Segurança</h2>
 
@@ -121,7 +122,7 @@
 
       </div>
 
-      <!-- ÁREA DE ATUAÇÃO -->
+      <!-- Seleção da área de atuação do profissional -->
       <div class="perfil-section">
         <h2 class="column-title">Área de atuação</h2>
         <div class="checkbox-group">
@@ -156,6 +157,7 @@
   </div>
 
   <script>
+    // Função para mostrar o preview da imagem selecionada no formulário
     function previewFoto(input) {
       const preview = document.getElementById('foto-preview')
       if (input.files && input.files[0]) {
