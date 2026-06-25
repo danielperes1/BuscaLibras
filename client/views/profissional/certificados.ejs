@@ -1,0 +1,153 @@
+<%- include('../partials/head', { titulo: 'Certificados' }) %>
+
+<body class="page-sistema">
+
+  <%- include('../partials/header') %>
+
+  <main class="cert-page">
+    <div class="cert-board">
+
+      <form id="certForm" action="/meu-perfil/certificados" method="POST" enctype="multipart/form-data">
+        <input type="file" id="fileInput" name="anexo" accept="application/pdf,image/jpeg,image/png" hidden>
+
+        <!-- TOPO -->
+        <div class="cert-topbar">
+          <div class="cert-titulo">
+            <h1>Certificados e Credenciais</h1>
+            <p>Adicione seus documentos para aumentar a credibilidade do perfil</p>
+          </div>
+          <div class="cert-acoes">
+            <button type="button" id="btnEnviarTopo" class="btn-cert-enviar">Enviar certificado</button>
+            <a href="/meu-perfil" class="btn-cert-voltar"><i class="fa-solid fa-arrow-left"></i> Voltar</a>
+          </div>
+        </div>
+
+        <div class="cert-grid">
+
+          <!-- COLUNA ESQUERDA: UPLOAD -->
+          <section class="cert-card cert-card-upload">
+            <div id="dropzone" class="cert-dropzone">
+              <i class="fa-solid fa-folder-open cert-dropzone-icone"></i>
+              <h3>Arraste o arquivo aqui</h3>
+              <p>Ou clique para selecionar <strong>PDF, JPG ou PNG</strong> até 10MB</p>
+            </div>
+
+            <div class="cert-como-funciona">
+              <h4>Como funciona?</h4>
+              <ul>
+                <li><span class="bolinha bolinha--roxo"></span> Envie o documento em PDF, JPG ou PNG</li>
+                <li><span class="bolinha bolinha--amarelo"></span> Nossa equipe analisa em até 48h</li>
+                <li><span class="bolinha bolinha--verde"></span> Certificado verificado aparece no seu perfil</li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- COLUNA DIREITA: LISTA -->
+          <section class="cert-card cert-card-lista">
+            <h2 class="cert-lista-titulo">CERTIFICADOS ENVIADOS</h2>
+
+            <% if (certificados && certificados.length > 0) { %>
+              <div class="cert-enviados">
+                <% certificados.forEach(function (cert) { %>
+                  <div class="cert-item">
+                    <div class="cert-item-info">
+                      <span class="cert-item-icone cert-item-icone--<%= cert.isPdf ? 'pdf' : 'img' %>">
+                        <%= cert.isPdf ? 'PDF' : 'IMG' %>
+                      </span>
+                      <div class="cert-item-textos">
+                        <span class="cert-item-titulo"><%= cert.titulo %></span>
+                        <span class="cert-item-arquivo"><%= cert.arquivo %> — enviado em <%= cert.dataFormatada %></span>
+                      </div>
+                    </div>
+                    <span class="cert-badge cert-badge--<%= cert.statusClasse %>"><%= cert.statusLabel %></span>
+                  </div>
+                <% }) %>
+              </div>
+            <% } else { %>
+              <div class="cert-lista-vazia">
+                <i class="fa-solid fa-inbox"></i>
+                <p>Você ainda não enviou nenhum certificado.</p>
+              </div>
+            <% } %>
+          </section>
+
+        </div>
+
+        <!-- MODAL: NOME DO CERTIFICADO -->
+        <div id="certModal" class="cert-modal" hidden>
+          <div class="cert-modal-box">
+            <h3>Nome do certificado</h3>
+            <p class="cert-modal-arquivo"><i class="fa-solid fa-paperclip"></i> <span id="modalArquivo"></span></p>
+
+            <label for="tituloCert">Como esse certificado deve aparecer no seu perfil?</label>
+            <input type="text" id="tituloCert" name="titulo" placeholder="Ex: ProLibras - Nível Superior" maxlength="150">
+
+            <div class="cert-modal-acoes">
+              <button type="button" id="btnCancelar" class="btn-cert-voltar">Cancelar</button>
+              <button type="submit" id="btnConfirmar" class="btn-cert-enviar">Enviar certificado</button>
+            </div>
+          </div>
+        </div>
+
+      </form>
+
+    </div>
+  </main>
+
+  <script>
+    const fileInput = document.getElementById('fileInput');
+    const dropzone  = document.getElementById('dropzone');
+    const modal     = document.getElementById('certModal');
+    const modalArquivo = document.getElementById('modalArquivo');
+    const tituloCert   = document.getElementById('tituloCert');
+    const btnTopo   = document.getElementById('btnEnviarTopo');
+    const btnCancelar = document.getElementById('btnCancelar');
+
+    function abrirSeletor() { fileInput.click(); }
+
+    function abrirModal() {
+      if (!fileInput.files.length) return;
+      modalArquivo.textContent = fileInput.files[0].name;
+      tituloCert.value = '';
+      modal.hidden = false;
+      tituloCert.focus();
+    }
+
+    function fecharModal() {
+      modal.hidden = true;
+      fileInput.value = '';
+    }
+
+    dropzone.addEventListener('click', abrirSeletor);
+    btnTopo.addEventListener('click', abrirSeletor);
+    fileInput.addEventListener('change', abrirModal);
+    btnCancelar.addEventListener('click', fecharModal);
+
+    // Fecha o modal ao clicar fora da caixa
+    modal.addEventListener('click', (e) => { if (e.target === modal) fecharModal(); });
+
+    // Drag & drop
+    ['dragenter', 'dragover'].forEach(ev =>
+      dropzone.addEventListener(ev, (e) => { e.preventDefault(); dropzone.classList.add('cert-dropzone--ativo'); })
+    );
+    ['dragleave', 'drop'].forEach(ev =>
+      dropzone.addEventListener(ev, (e) => { e.preventDefault(); dropzone.classList.remove('cert-dropzone--ativo'); })
+    );
+    dropzone.addEventListener('drop', (e) => {
+      if (e.dataTransfer.files.length) {
+        fileInput.files = e.dataTransfer.files;
+        abrirModal();
+      }
+    });
+
+    // Garante que o titulo foi preenchido antes de enviar
+    document.getElementById('certForm').addEventListener('submit', (e) => {
+      if (!fileInput.files.length || !tituloCert.value.trim()) {
+        e.preventDefault();
+        tituloCert.focus();
+      }
+    });
+  </script>
+
+</body>
+</html>

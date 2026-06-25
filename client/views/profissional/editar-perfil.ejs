@@ -1,0 +1,129 @@
+<%- include('../partials/head', { titulo: 'Editar Perfil' }) %>
+
+<body class="page-sistema">
+
+  <%- include('../partials/header') %>
+
+  <main class="editar-page">
+    <form class="editar-form" action="/meu-perfil/editar" method="POST" enctype="multipart/form-data">
+
+      <!-- TOPO -->
+      <div class="editar-topbar">
+        <div class="editar-titulo">
+          <h1>Editar Perfil Profissional</h1>
+          <p>Mantenha suas informações sempre atualizadas</p>
+        </div>
+
+        <div class="editar-acoes">
+          <a href="/meu-perfil" class="btn-claro">Visualizar perfil público</a>
+          <a href="/meu-perfil" class="btn-claro">Cancelar</a>
+          <button type="submit" class="btn-salvar">Salvar alterações</button>
+        </div>
+      </div>
+
+      <div class="editar-grid">
+
+        <!-- COLUNA ESQUERDA -->
+        <aside class="editar-card editar-card-lateral">
+          <% if (foto) { %>
+            <img class="editar-avatar" src="<%= foto %>" alt="<%= perfil.nome %>">
+          <% } else { %>
+            <span class="editar-avatar editar-avatar--iniciais"><%= iniciais %></span>
+          <% } %>
+
+          <h2 class="editar-nome"><%= perfil.nome %></h2>
+
+          <label class="btn-upload">
+            <i class="fa-solid fa-image"></i>
+            <span>Alterar foto<small>JPG ou PNG, até 5MB</small></span>
+            <input type="file" name="foto" accept="image/png, image/jpeg" hidden>
+          </label>
+
+          <div class="editar-divisor"></div>
+
+          <div class="editar-bloco">
+            <span class="editar-bloco-titulo">Status da disponibilidade</span>
+            <span class="status-pill status-pill--<%= (perfil.disponibilidade === 'Indisponível') ? 'off' : 'on' %>">
+              <%= perfil.disponibilidade || 'Disponível' %>
+            </span>
+          </div>
+
+          <div class="editar-divisor"></div>
+
+          <div class="editar-bloco">
+            <span class="editar-bloco-titulo">Envio de certificados</span>
+            <a href="/meu-perfil/certificados" class="btn-upload">
+              <i class="fa-solid fa-arrow-up-from-bracket"></i>
+              <span>Enviar Certificados<small>PDF ou JPG, até 10MB</small></span>
+            </a>
+          </div>
+        </aside>
+
+        <!-- COLUNA DIREITA -->
+        <section class="editar-card editar-card-dados">
+          <h3 class="editar-secao-titulo">Dados pessoais</h3>
+
+          <div class="editar-campos">
+            <div class="campo">
+              <label for="nome">Nome Completo</label>
+              <input type="text" id="nome" name="nome" value="<%= perfil.nome || '' %>" required>
+            </div>
+
+            <div class="campo">
+              <label for="data">Data de Nascimento</label>
+              <input type="date" id="data" name="data_de_nascimento" value="<%= dataNascimento %>">
+            </div>
+
+            <div class="campo">
+              <label for="disponibilidade">Disponibilidade</label>
+              <select id="disponibilidade" name="disponibilidade">
+                <option value="Disponível"   <%= perfil.disponibilidade !== 'Indisponível' ? 'selected' : '' %>>Disponível</option>
+                <option value="Indisponível" <%= perfil.disponibilidade === 'Indisponível' ? 'selected' : '' %>>Indisponível</option>
+              </select>
+            </div>
+
+            <div class="campo">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" value="<%= perfil.email || '' %>" required>
+            </div>
+
+            <div class="campo">
+              <label for="telefone">Telefone</label>
+              <input type="text" id="telefone" name="telefone" value="<%= perfil.telefone || '' %>">
+            </div>
+
+            <div class="campo campo--full">
+              <label for="sobre">Sobre mim</label>
+              <textarea id="sobre" name="sobre" rows="4" maxlength="500"><%= perfil.sobre || '' %></textarea>
+              <span class="campo-contador"><span id="contador">0</span>/500</span>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- AREA DE ATUACAO -->
+      <div class="editar-card editar-card-atuacao">
+        <span class="editar-secao-titulo editar-secao-titulo--centro">Área de Atuação</span>
+        <div class="chips-atuacao">
+          <% areas.forEach(function (area) { %>
+            <label class="chip-atuacao">
+              <input type="radio" name="area_de_atuacao" value="<%= area %>" <%= perfil.area_de_atuacao === area ? 'checked' : '' %>>
+              <span><%= area %></span>
+            </label>
+          <% }) %>
+        </div>
+      </div>
+
+    </form>
+  </main>
+
+  <script>
+    const sobre = document.getElementById('sobre');
+    const contador = document.getElementById('contador');
+    const atualizar = () => contador.textContent = sobre.value.length;
+    if (sobre) { atualizar(); sobre.addEventListener('input', atualizar); }
+  </script>
+
+</body>
+</html>

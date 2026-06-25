@@ -13,8 +13,9 @@
         <a href="/profissionais" class="nav-link">Profissionais</a>
         <a href="/solicitantes" class="nav-link">Solicitantes</a>
       <% } else if (usuario && usuario.perfil === 'profissional') { %>
-        <a href="/dashboard/inicio" class="nav-link">Home</a>
-        <a href="/meu-perfil" class="nav-link">Meu Perfil</a>
+        <a href="/dashboard/inicio" class="nav-link <%= typeof paginaAtual !== 'undefined' && paginaAtual === 'home' ? 'active' : '' %>">Home</a>
+        <a href="/meu-perfil" class="nav-link <%= typeof paginaAtual !== 'undefined' && paginaAtual === 'perfil' ? 'active' : '' %>">Meu Perfil</a>
+        <a href="/dashboard/inicio#interessados-recentes" class="nav-link">Interessados</a>
       <% } else if (usuario && usuario.perfil === 'solicitante') { %>
         <a href="/profissionais/vitrine" class="nav-link">Home</a>
         <a href="/meu-perfil" class="nav-link">Meu Perfil</a>

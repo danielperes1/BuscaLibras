@@ -1,0 +1,82 @@
+<%- include('../partials/head', { titulo: 'Meu Perfil' }) %>
+
+<body class="page-sistema">
+
+  <%- include('../partials/header') %>
+
+  <main class="perfil-page">
+    <div class="perfil-board">
+
+    <div class="perfil-topbar">
+      <a href="/meu-perfil/editar" class="btn-editar-top">
+        <i class="fa-solid fa-pen"></i> Editar perfil
+      </a>
+    </div>
+
+    <div class="perfil-grid">
+
+      <!-- COLUNA ESQUERDA -->
+      <aside class="perfil-coluna-esq">
+
+        <div class="perfil-card perfil-card-principal">
+          <% if (foto) { %>
+            <img class="perfil-avatar" src="<%= foto %>" alt="<%= perfil.nome %>">
+          <% } else { %>
+            <span class="perfil-avatar perfil-avatar--iniciais"><%= iniciais %></span>
+          <% } %>
+
+          <h2 class="perfil-nome"><%= perfil.nome %></h2>
+          <p class="perfil-area"><%= perfil.area_de_atuacao || 'Profissional' %></p>
+
+          <ul class="perfil-dados">
+            <li><i class="fa-solid fa-location-dot"></i> <%= localizacao %></li>
+            <% if (perfil.telefone) { %><li><i class="fa-solid fa-phone"></i> <%= perfil.telefone %></li><% } %>
+            <li><i class="fa-solid fa-envelope"></i> <%= perfil.email %></li>
+          </ul>
+
+          <a href="/meu-perfil/editar" class="btn-editar-outline">
+            <i class="fa-solid fa-pen"></i> Editar perfil
+          </a>
+        </div>
+
+        <div class="perfil-card perfil-card-visualizacao">
+          <h3>Como vejo meu perfil</h3>
+          <p>Esta é a visualização que os solicitantes veem ao acessar seu perfil.</p>
+        </div>
+
+      </aside>
+
+      <!-- COLUNA DIREITA -->
+      <section class="perfil-coluna-dir">
+
+        <div class="perfil-card perfil-card-sobre">
+          <h3>Sobre mim</h3>
+          <% if (perfil.sobre) { %>
+            <p><%= perfil.sobre %></p>
+          <% } else { %>
+            <p class="texto-vazio">Você ainda não adicionou uma descrição. Clique em "Editar perfil" para se apresentar aos solicitantes.</p>
+          <% } %>
+        </div>
+
+        <div class="perfil-card perfil-card-cert">
+          <h3>Certificações e credenciais</h3>
+
+          <div class="cert-vazio">
+            <i class="fa-solid fa-award cert-vazio-icone"></i>
+            <span class="cert-vazio-status">Não enviado</span>
+            <p>Você ainda não enviou certificações ou credenciais.</p>
+            <a href="/meu-perfil/certificados" class="btn-editar-outline btn-cert-gerenciar">
+              <i class="fa-solid fa-upload"></i> Enviar certificado
+            </a>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+
+    </div>
+  </main>
+
+</body>
+</html>

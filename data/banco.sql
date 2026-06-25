@@ -34,6 +34,8 @@ data_de_nascimento date,
 pergunta_rec_senha ENUM('Qual o nome da sua mãe?', 'Qual o nome do seu primeiro pet?', 'Qual o nome do jogador de futebol preferido?') not null,
 resposta_rec_senha varchar (255) not null,
 area_de_atuacao ENUM('Intérprete de Libras', 'Tradutor de Libras', 'Guia-Intérprete', 'Instrutor de Libras'),
+sobre TEXT,
+disponibilidade ENUM('Disponível', 'Indisponível') DEFAULT 'Disponível',
 estado varchar (255),
 cidade varchar (255),
 foto varchar(255),
@@ -62,6 +64,8 @@ create table interesse(
 id int auto_increment primary key,
 id_solicitante int,
 id_profissional int,
+status ENUM('pendente', 'aceito', 'recusado') DEFAULT 'pendente',
+data_interesse TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 foreign key (id_profissional) references profissional(id),
 foreign key (id_solicitante) references solicitante(id)
 
@@ -72,7 +76,8 @@ id int auto_increment primary key,
 id_profissional int,
 foreign key (id_profissional) references profissional(id),
 titulo text not null,
-anexo varchar(255)
+anexo varchar(255),
+data_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 create table aprovacao(
@@ -117,15 +122,48 @@ INSERT INTO usuarios (email, senha, perfil) VALUES
 ('maria@gmail.com', '$2a$10$hVzmAhT7OCj.Kjg.VuBH..az9CgnD0qLZZfG597canPv4N5LG2Ud.', 'profissional');
 
 -- Cria o perfil vinculado ao usuário recém-criado
-INSERT INTO profissional 
-(nome, telefone, data_de_nascimento, pergunta_rec_senha, resposta_rec_senha, 
- area_de_atuacao, estado, cidade, foto, id_usuario) 
+INSERT INTO profissional
+(nome, telefone, data_de_nascimento, pergunta_rec_senha, resposta_rec_senha,
+ area_de_atuacao, sobre, disponibilidade, estado, cidade, foto, id_usuario)
 VALUES
-('Maria Oliveira', '(27) 99999-8888', '1988-07-25', 
- 'Qual o nome da sua mãe?', 'Ana', 
- 'Intérprete de Libras', 'ES', 'Vitória', 
+('Maria Oliveira', '(27) 99999-8888', '1988-07-25',
+ 'Qual o nome da sua mãe?', 'Ana',
+ 'Intérprete de Libras',
+ 'Intérprete certificada com mais de 8 anos de experiência em interpretação simultânea e consecutiva. Especializada em eventos corporativos, audiências judiciais e contextos acadêmicos.',
+ 'Disponível', 'ES', 'Vitória',
  'maria.jpg', LAST_INSERT_ID()
  );
+
+
+-- ============================================
+-- 4) SOLICITANTES EXTRAS (para demonstrar interesses na home do profissional)
+-- ============================================
+-- Senha de todos: joao456 (mesmo hash do solicitante padrão)
+INSERT INTO usuarios (email, senha, perfil) VALUES
+('ana.beatriz@gmail.com', '$2a$10$EK781yx0ZabAdfHEut2KIuk9b2Pq8PhZVMm6x/KFiyvE0/2xjCiZ.', 'solicitante');
+INSERT INTO solicitante (nome, telefone, data_de_nascimento, estado, cidade, pergunta_rec_senha, resposta_rec_senha, foto, id_usuario)
+VALUES ('Ana Beatriz', '(27) 98888-1111', '1999-02-10', 'ES', 'Vila Velha',
+        'Qual o nome do seu primeiro pet?', 'Mel', NULL, LAST_INSERT_ID());
+
+INSERT INTO usuarios (email, senha, perfil) VALUES
+('ricardo.matos@gmail.com', '$2a$10$EK781yx0ZabAdfHEut2KIuk9b2Pq8PhZVMm6x/KFiyvE0/2xjCiZ.', 'solicitante');
+INSERT INTO solicitante (nome, telefone, data_de_nascimento, estado, cidade, pergunta_rec_senha, resposta_rec_senha, foto, id_usuario)
+VALUES ('Ricardo Matos', '(27) 97777-2222', '1992-09-05', 'ES', 'Serra',
+        'Qual o nome da sua mãe?', 'Clara', NULL, LAST_INSERT_ID());
+
+INSERT INTO usuarios (email, senha, perfil) VALUES
+('luiza.santos@gmail.com', '$2a$10$EK781yx0ZabAdfHEut2KIuk9b2Pq8PhZVMm6x/KFiyvE0/2xjCiZ.', 'solicitante');
+INSERT INTO solicitante (nome, telefone, data_de_nascimento, estado, cidade, pergunta_rec_senha, resposta_rec_senha, foto, id_usuario)
+VALUES ('Luiza Santos', '(27) 96666-3333', '2000-12-20', 'ES', 'Vitória',
+        'Qual o nome do jogador de futebol preferido?', 'Pelé', NULL, LAST_INSERT_ID());
+
+-- Interesses demonstrados na profissional Maria Oliveira (id = 1, primeiro profissional inserido)
+-- Solicitantes: João = 1, Ana Beatriz = 2, Ricardo = 3, Luiza = 4
+INSERT INTO interesse (id_solicitante, id_profissional, status, data_interesse) VALUES
+(2, 1, 'pendente', NOW()),
+(3, 1, 'pendente', NOW()),
+(4, 1, 'aceito',    NOW()),
+(1, 1, 'aceito',    NOW() - INTERVAL 2 DAY);
 
 
 /*

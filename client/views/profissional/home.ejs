@@ -1,0 +1,100 @@
+<%- include('../partials/head', { titulo: 'Home' }) %>
+
+<body class="page-sistema">
+
+  <%- include('../partials/header') %>
+
+  <main class="prof-home">
+    <div class="prof-board">
+
+      <!-- TOPO: titulo + cards de estatistica -->
+      <div class="board-top">
+        <div class="board-title">
+          <span class="board-eyebrow">Bem-Vindo, <%= nome %></span>
+          <h1>Veja um resumo da sua conta profissional</h1>
+        </div>
+
+        <div class="board-stats">
+          <div class="stat-mini">
+            <span class="stat-mini-numero"><%= totalInteressados %></span>
+            <span class="stat-mini-label">Interessados</span>
+          </div>
+          <div class="stat-mini">
+            <span class="stat-mini-numero"><%= novosHoje %></span>
+            <span class="stat-mini-label">Novos hoje</span>
+          </div>
+          <div class="stat-mini">
+            <span class="stat-mini-numero stat-mini-numero--destaque"><%= perfilCompleto %>%</span>
+            <span class="stat-mini-label">Perfil completo</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CORPO: resumo rapido + interessados recentes -->
+      <div class="board-grid">
+
+        <!-- RESUMO RAPIDO -->
+        <section class="resumo-card">
+          <h2 class="resumo-card-titulo">Resumo rápido</h2>
+
+          <div class="resumo-tiles">
+            <div class="resumo-tile resumo-tile--total">
+              <span class="resumo-tile-numero"><%= totalInteressados %></span>
+              <span class="resumo-tile-label">Interessados</span>
+            </div>
+            <div class="resumo-tile resumo-tile--aceito">
+              <span class="resumo-tile-numero"><%= aceitos %></span>
+              <span class="resumo-tile-label">Aceitos</span>
+            </div>
+            <div class="resumo-tile resumo-tile--pendente">
+              <span class="resumo-tile-numero"><%= pendentes %></span>
+              <span class="resumo-tile-label">Pendente</span>
+            </div>
+            <div class="resumo-tile resumo-tile--recusado">
+              <span class="resumo-tile-numero"><%= recusados %></span>
+              <span class="resumo-tile-label">Recusado</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- INTERESSADOS RECENTES -->
+        <section class="interessados-card" id="interessados-recentes">
+          <div class="interessados-card-header">
+            <div>
+              <h2>Interessados recentes</h2>
+              <p>Pessoas que demonstraram interesse no seu perfil profissional</p>
+            </div>
+            <a href="/dashboard/inicio#interessados-recentes" class="btn-ver-todos">Ver todos</a>
+          </div>
+
+          <div class="lista-interessados">
+            <% if (interessados && interessados.length > 0) { %>
+              <% interessados.forEach(function (pessoa) { %>
+                <div class="interessado-card">
+                  <div class="interessado-info">
+                    <span class="interessado-avatar interessado-avatar--iniciais" <% if (pessoa.foto) { %>style="display:none"<% } %>><%= pessoa.inicial %></span>
+                    <% if (pessoa.foto) { %>
+                      <img class="interessado-avatar" src="<%= pessoa.foto %>" alt="<%= pessoa.nome %>" onerror="this.previousElementSibling.style.display='flex';this.remove()">
+                    <% } %>
+                    <div class="interessado-textos">
+                      <span class="interessado-nome"><%= pessoa.nome %></span>
+                      <span class="interessado-local"><%= pessoa.localizacao %></span>
+                    </div>
+                  </div>
+
+                  <a href="#" class="btn-ver-interesse">Ver interesse</a>
+                </div>
+              <% }) %>
+            <% } else { %>
+              <div class="lista-vazia">Você ainda não recebeu interesses.</div>
+            <% } %>
+          </div>
+        </section>
+
+      </div>
+
+    </div>
+  </main>
+
+</body>
+</html>
