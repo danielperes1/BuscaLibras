@@ -174,8 +174,8 @@ body {
   .pading-cima{
     padding-top: 20px;
   }
-  .remover-borda{
-    border: none;
+  .remover-borda, .remover-borda:active {
+    border: none;outline: none;
   }
   .acoes {
   display: flex;
@@ -187,6 +187,15 @@ body {
   justify-content: center;
   gap: 8px;
 }
+  /* Seletores dentro do wrapper .input-box para o layout de login */
+  .page-login .input-box select {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    background: transparent;
+    font-family: 'Poppins', sans-serif;
+  }
 /* ============================================================
    ESCOLHA
    ============================================================ */
