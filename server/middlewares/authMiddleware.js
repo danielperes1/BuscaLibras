@@ -21,5 +21,12 @@ module.exports = {
             return res.status(403).json({ mensagem: 'Acesso restrito ao administrador' })
         }
         next()
+    },
+
+    somenteProfissional: (req, res, next) => {
+        if (req.usuario?.perfil !== 'profissional') {
+            return res.status(403).json({ mensagem: 'Acesso restrito ao profissional' })
+        }
+        next()
     }
 }

@@ -66,6 +66,18 @@ const usuariosRoutes = require("./routers/usuarioRouters.js");
 // Requisições começando com /usuarios e gerenciada pelo sub-arquivo de rotas
 app.use("/usuarios", usuariosRoutes);
 
+//importar as rotas do dashboard do profissional
+const dashboardRoutes = require("./routers/dashboardRouters.js");
+
+// Requisições começando com /dashboard (home do profissional)
+app.use("/dashboard", dashboardRoutes);
+
+//importar as rotas de perfil do profissional
+const perfilRoutes = require("./routers/perfilRouters.js");
+
+// Requisições começando com /meu-perfil
+app.use("/meu-perfil", perfilRoutes);
+
 
 // Funcao para subir no servidor
 /*

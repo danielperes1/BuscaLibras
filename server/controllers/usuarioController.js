@@ -76,6 +76,200 @@ module.exports = {
         }
     },
 
+    // HOME DO PROFISSIONAL - resumo dos interesses recebidos
+    homeProfissional: async (req, res) => {
+        try {
+            const idUsuario = req.usuario.id
+
+            const profissional = await usuarioModel.buscarProfissionalPorIdUsuario(idUsuario)
+            if (!profissional) return res.status(404).json({ mensagem: "Profissional nao encontrado" })
+
+            const idProfissional = profissional.id
+
+            const [totalInteressados, novosHoje, porStatus, interessadosBrutos] = await Promise.all([
+                usuarioModel.contarInteressesPorProfissional(idProfissional),
+                usuarioModel.contarInteressesHoje(idProfissional),
+                usuarioModel.contarInteressesPorStatus(idProfissional),
+                usuarioModel.listarInteressadosRecentes(idProfissional, 3)
+            ])
+
+            // Calcula o percentual de preenchimento do perfil
+            const camposPerfil = ['nome', 'telefone', 'data_de_nascimento', 'area_de_atuacao', 'estado', 'cidade', 'foto']
+            const preenchidos = camposPerfil.filter(campo => profissional[campo]).length
+            const perfilCompleto = Math.round((preenchidos / camposPerfil.length) * 100)
+
+            // Gera iniciais e cor de avatar para cada interessado
+            const coresAvatar = ['#b39ddb', '#80cbc4', '#dce775', '#ffab91', '#9fa8da', '#f48fb1', '#90caf9']
+            const interessados = interessadosBrutos.map((item, i) => {
+                const nome = (item.nome || '').trim()
+                const inicial = (nome[0] || '?').toUpperCase()
+                const localizacao = [item.cidade, item.estado].filter(Boolean).join(' - ') || '-'
+                // So usa a foto se for um upload real (ignora placeholders do seed como "joao.jpg")
+                const foto = (item.foto && item.foto.startsWith('/uploads/')) ? item.foto : null
+                return {
+                    ...item,
+                    foto,
+                    inicial,
+                    localizacao,
+                    cor: coresAvatar[i % coresAvatar.length]
+                }
+            })
+
+            res.render('profissional/home', {
+                nome: req.usuario.nome,
+                totalInteressados,
+                novosHoje,
+                perfilCompleto,
+                aceitos: porStatus.aceito,
+                pendentes: porStatus.pendente,
+                recusados: porStatus.recusado,
+                interessados,
+                paginaAtual: 'home'
+            })
+        } catch (erro) {
+            console.error(erro)
+            res.status(500).json({ mensagem: "Erro ao carregar a home do profissional" })
+        }
+    },
+
+    // MEU PERFIL DO PROFISSIONAL - visualizacao do proprio perfil
+    meuPerfil: async (req, res) => {
+        try {
+            const perfil = await usuarioModel.buscarPerfilProfissional(req.usuario.id)
+            if (!perfil) return res.status(404).json({ mensagem: "Profissional nao encontrado" })
+
+            const nome = (perfil.nome || '').trim()
+            const partesNome = nome.split(/\s+/)
+            const iniciais = (partesNome[0][0] + (partesNome[1]?.[0] || '')).toUpperCase()
+            const localizacao = [perfil.cidade, perfil.estado].filter(Boolean).join(' - ') || '-'
+            const foto = (perfil.foto && perfil.foto.startsWith('/uploads/')) ? perfil.foto : null
+
+            res.render('profissional/perfil', {
+                perfil,
+                iniciais,
+                localizacao,
+                foto,
+                paginaAtual: 'perfil'
+            })
+        } catch (erro) {
+            console.error(erro)
+            res.status(500).json({ mensagem: "Erro ao carregar o perfil" })
+        }
+    },
+
+    // FORMULARIO DE EDICAO DO PERFIL DO PROFISSIONAL
+    editarPerfilForm: async (req, res) => {
+        try {
+            const perfil = await usuarioModel.buscarPerfilProfissional(req.usuario.id)
+            if (!perfil) return res.status(404).json({ mensagem: "Profissional nao encontrado" })
+
+            const nome = (perfil.nome || '').trim()
+            const partesNome = nome.split(/\s+/)
+            const iniciais = (partesNome[0][0] + (partesNome[1]?.[0] || '')).toUpperCase()
+            const foto = (perfil.foto && perfil.foto.startsWith('/uploads/')) ? perfil.foto : null
+
+            // Formata a data para o input type=date (YYYY-MM-DD)
+            let dataNascimento = ''
+            if (perfil.data_de_nascimento) {
+                const d = new Date(perfil.data_de_nascimento)
+                dataNascimento = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+            }
+
+            const areas = ['Intérprete de Libras', 'Tradutor de Libras', 'Guia-Intérprete', 'Instrutor de Libras']
+
+            res.render('profissional/editar-perfil', {
+                perfil,
+                iniciais,
+                foto,
+                dataNascimento,
+                areas,
+                paginaAtual: 'perfil'
+            })
+        } catch (erro) {
+            console.error(erro)
+            res.status(500).json({ mensagem: "Erro ao carregar a edicao do perfil" })
+        }
+    },
+
+    // SALVA AS ALTERACOES DO PERFIL DO PROFISSIONAL
+    atualizarPerfil: async (req, res) => {
+        try {
+            const idUsuario = req.usuario.id
+            const { nome, email, telefone, data_de_nascimento, area_de_atuacao, sobre, disponibilidade } = req.body
+            const foto = req.file ? `/uploads/usuarios/${req.file.filename}` : null
+
+            // Se trocou o email, garante que ainda nao existe em outra conta
+            if (email) {
+                const existente = await usuarioModel.buscarPorEmail(email)
+                if (existente && existente.id !== idUsuario) {
+                    return res.status(400).json({ mensagem: "Email ja cadastrado em outra conta" })
+                }
+                await usuarioModel.atualizarEmailUsuario(idUsuario, email)
+            }
+
+            await usuarioModel.atualizarPerfilProfissional(idUsuario, {
+                nome, telefone, data_de_nascimento, area_de_atuacao, sobre, disponibilidade, foto
+            })
+
+            res.redirect("/meu-perfil")
+        } catch (erro) {
+            console.error(erro)
+            res.status(500).json({ mensagem: "Erro ao salvar o perfil" })
+        }
+    },
+
+    // TELA DE CERTIFICADOS E CREDENCIAIS DO PROFISSIONAL
+    certificadosForm: async (req, res) => {
+        try {
+            const profissional = await usuarioModel.buscarProfissionalPorIdUsuario(req.usuario.id)
+            if (!profissional) return res.status(404).json({ mensagem: "Profissional nao encontrado" })
+
+            const labelStatus = { pendente: 'em análise', aprovado: 'verificado', recusado: 'recusado' }
+            const brutos = await usuarioModel.listarCertificadosProfissional(profissional.id)
+
+            const certificados = brutos.map(cert => {
+                const arquivo = (cert.anexo || '').split('/').pop()
+                const ext = arquivo.split('.').pop().toLowerCase()
+                return {
+                    ...cert,
+                    arquivo,
+                    isPdf: ext === 'pdf',
+                    statusLabel: labelStatus[cert.status] || 'em análise',
+                    statusClasse: cert.status === 'aprovado' ? 'verificado' : cert.status === 'recusado' ? 'recusado' : 'analise',
+                    dataFormatada: cert.data_envio ? new Date(cert.data_envio).toLocaleDateString('pt-BR') : ''
+                }
+            })
+
+            res.render('profissional/certificados', {
+                certificados,
+                paginaAtual: 'perfil'
+            })
+        } catch (erro) {
+            console.error(erro)
+            res.status(500).json({ mensagem: "Erro ao carregar os certificados" })
+        }
+    },
+
+    // ENVIO DE UM NOVO CERTIFICADO (fica como 'pendente' ate o ADM aprovar)
+    enviarCertificado: async (req, res) => {
+        try {
+            const profissional = await usuarioModel.buscarProfissionalPorIdUsuario(req.usuario.id)
+            if (!profissional) return res.status(404).json({ mensagem: "Profissional nao encontrado" })
+
+            const { titulo } = req.body
+            if (!req.file) return res.status(400).json({ mensagem: "Nenhum arquivo enviado" })
+            if (!titulo || !titulo.trim()) return res.status(400).json({ mensagem: "Informe o nome do certificado" })
+
+            const anexo = `/uploads/certificados/${req.file.filename}`
+            await usuarioModel.criarCertificado(profissional.id, titulo.trim(), anexo)
+
+            res.redirect("/meu-perfil/certificados")
+        } catch (erro) {
+            console.error(erro)
+            res.status(500).json({ mensagem: "Erro ao enviar o certificado" })
+        }
+    },
+
     cadastrar: async (req, res) => {
         try {
             const { nome, email, senha, perfil, telefone, data_de_nascimento, pergunta_rec_senha, resposta_rec_senha, area_de_atuacao, estado, cidade } = req.body

@@ -7,6 +7,7 @@ const pool = mysql.createPool({
     user: process.env.DB_USER, // Usuario que fará a conexão
     password: process.env.DB_PASSWORD, // Senha do usuario
     database: process.env.DB_NAME, // Banco ao qual deseja se conectar
+    charset: 'utf8mb4', // Garante que acentos (ç, á, é...) e ENUMs com acento sejam gravados corretamente
      // Se todas conexoes estiverem ocupadas, deixa o usuario esperando sem dar erro
     waitForConnections: true, 
     // Quantidade maxima de conexoes ao mesmo tempo
