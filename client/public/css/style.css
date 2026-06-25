@@ -169,6 +169,25 @@ body {
 }
 
 /* ============================================================
+   reset de senha
+   ============================================================ */
+  .pading-cima{
+    padding-top: 20px;
+  }
+  .remover-borda{
+    border: none;
+  }
+  .acoes {
+  display: flex;
+  align-items: center; /* centraliza verticalmente */
+  gap: 10px; /* espaço entre o botão e o ícone */
+}.btn-login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+/* ============================================================
    ESCOLHA
    ============================================================ */
 .page-escolha .container {

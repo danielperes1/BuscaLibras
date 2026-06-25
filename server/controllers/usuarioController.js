@@ -40,6 +40,10 @@ module.exports = {
     }
   },
 
+  redefinicao_senha: (req, res) => {
+    
+  },
+
   logout: (req, res) => {
     // Limpa o cookie do token e redireciona para a página de login
     res.clearCookie('token')

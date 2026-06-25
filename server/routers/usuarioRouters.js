@@ -9,6 +9,7 @@ const { verificarAutenticacao, somenteAdmin } = require('../middlewares/authMidd
 router.post('/login', usuarioController.login)
 router.get('/logout', usuarioController.logout)
 router.post('/cadastrar', upload.single('foto'), usuarioController.cadastrar)
+router.post('/redefinicaoSenha', usuarioController.redefinicao_senha)
 
 // Rotas protegidas destinadas apenas ao administrador
 router.get('/', verificarAutenticacao, somenteAdmin, usuarioController.dashboard)

@@ -1,0 +1,63 @@
+<%- include('../partials/head', { titulo: 'Redefinir Senha' }) %>
+
+<body class="page-login">
+
+  <div class="container">
+
+    <!-- Logo do sistema -->
+    <img src="/img/logo.png" alt="Busca Libras" class="logo">
+
+    <h1>Recuperar Senha</h1>
+
+    <!-- Formulário que envia o e-mail para o servidor -->
+    <form action="/redefinicaoSenha" method="POST">
+
+      <div class="input-group">
+        <label>E-mail Cadastrado</label>
+        <div class="input-box">
+          <i class="fa-solid fa-envelope"></i>
+          <input type="email" name="email" placeholder="Digite seu e-mail" required>
+        </div>
+        <label class="pading-cima">Pergunta de Segurança</label>
+        <div >
+          <select class="input-box remover-borda" name="p_seguranca" required>
+            <option value="">Selecione uma pergunta</option>
+            <option value="Qual o nome do seu primeiro pet?">Qual o nome do seu primeiro pet?</option>
+            <option value="Qual o nome da sua mãe?">Qual o nome da sua mãe?</option>
+            <option value="Qual o nome da sua cidade natal?">Qual o nome da sua cidade natal?</option>
+          </select>
+
+        </div>
+        <label class="pading-cima">Resposta de Segurança</label>
+        <div class="input-box">
+          <i class="fa-solid fa-comments"></i>
+          <input type="text" name="r_seguranca" placeholder="Digite sua resposta de segurança" required>
+        </div>
+        <label class="pading-cima">Senha</label>
+        <div class="input-box">
+          <i class="fa-solid fa-lock"></i>
+          <input type="password" name="senha" placeholder="Digite sua nova senha" required>
+        </div>
+        <label class="pading-cima">Confirmar Senha</label>
+        <div class="input-box">
+          <i class="fa-solid fa-lock"></i>
+          <input type="password" name="confirmar_senha" placeholder="Confirme sua nova senha" required>
+        </div>
+      </div>
+<div class="acoes">
+
+  <button class="btn-login">Gerar Senha</button>
+  
+</div>
+
+      <div class="register">
+        Lembrou a senha?
+        <a href="/login">Voltar para o Login</a>
+      </div>
+
+    </form>
+
+  </div>
+
+</body>
+</html>

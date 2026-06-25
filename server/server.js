@@ -52,6 +52,10 @@ app.get('/cadastro2', (req, res) => {
   res.render('auth/cadastro2')
 })
 
+// Rota pública para redefinição de senha (acessível em /redefinicaoSenha)
+app.get('/redefinicaoSenha', (req, res) => {
+  res.render('auth/redefinicaoSenha')
+})
 // Importa as rotas específicas de usuário
 const usuariosRoutes = require('./routers/usuarioRouters.js')
 app.use('/usuarios', usuariosRoutes) // Monta as rotas em /usuarios
