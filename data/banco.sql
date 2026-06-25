@@ -162,8 +162,7 @@ VALUES ('Luiza Santos', '(27) 96666-3333', '2000-12-20', 'ES', 'Vitória',
 INSERT INTO interesse (id_solicitante, id_profissional, status, data_interesse) VALUES
 (2, 1, 'pendente', NOW()),
 (3, 1, 'pendente', NOW()),
-(4, 1, 'aceito',    NOW()),
-(1, 1, 'aceito',    NOW() - INTERVAL 2 DAY);
+(4, 1, 'aceito',    NOW());
 
 
 /*

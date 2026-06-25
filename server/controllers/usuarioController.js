@@ -132,6 +132,73 @@ module.exports = {
         }
     },
 
+    // PAGINA DE INTERESSADOS - lista completa dos solicitantes interessados
+    paginaInteressados: async (req, res) => {
+        try {
+            const idUsuario = req.usuario.id
+
+            const profissional = await usuarioModel.buscarProfissionalPorIdUsuario(idUsuario)
+            if (!profissional) return res.status(404).json({ mensagem: "Profissional nao encontrado" })
+
+            const idProfissional = profissional.id
+
+            const interessadosBrutos = await usuarioModel.listarTodosInteressados(idProfissional)
+
+            // Gera iniciais, localizacao e cor de avatar para cada interessado
+            const coresAvatar = ['#d98a8a', '#8fc99a', '#7fc6c0', '#b39ddb', '#ffab91', '#9fa8da', '#f48fb1', '#90caf9']
+            const interessados = interessadosBrutos.map((item, i) => {
+                const nome = (item.nome || '').trim()
+                const partesNome = nome.split(/\s+/)
+                const iniciais = ((partesNome[0]?.[0] || '?') + (partesNome[1]?.[0] || '')).toUpperCase()
+                const foto = (item.foto && item.foto.startsWith('/uploads/')) ? item.foto : null
+                return {
+                    ...item,
+                    foto,
+                    iniciais,
+                    cidade: item.cidade || '',
+                    estado: item.estado || '',
+                    cor: coresAvatar[i % coresAvatar.length]
+                }
+            })
+
+            const pendentes = interessados.filter(p => p.status === 'pendente').length
+
+            res.render('profissional/interessados', {
+                nome: req.usuario.nome,
+                interessados,
+                pendentes,
+                paginaAtual: 'interessados'
+            })
+        } catch (erro) {
+            console.error(erro)
+            res.status(500).json({ mensagem: "Erro ao carregar os interessados" })
+        }
+    },
+
+    // ATUALIZA O STATUS DE UM INTERESSE (aceitar / recusar)
+    atualizarStatusInteresse: async (req, res) => {
+        try {
+            const idUsuario = req.usuario.id
+            const idInteresse = req.params.id
+            const { status } = req.body
+
+            const statusValidos = ['aceito', 'recusado', 'pendente']
+            if (!statusValidos.includes(status)) {
+                return res.status(400).json({ mensagem: "Status invalido" })
+            }
+
+            const profissional = await usuarioModel.buscarProfissionalPorIdUsuario(idUsuario)
+            if (!profissional) return res.status(404).json({ mensagem: "Profissional nao encontrado" })
+
+            await usuarioModel.atualizarStatusInteresse(idInteresse, profissional.id, status)
+
+            res.redirect("/dashboard/interessados")
+        } catch (erro) {
+            console.error(erro)
+            res.status(500).json({ mensagem: "Erro ao atualizar o interesse" })
+        }
+    },
+
     // MEU PERFIL DO PROFISSIONAL - visualizacao do proprio perfil
     meuPerfil: async (req, res) => {
         try {

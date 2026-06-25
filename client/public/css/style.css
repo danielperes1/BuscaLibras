@@ -1140,6 +1140,146 @@ body {
 
 
 /* ============================================================
+   PAGINA DE INTERESSADOS (lista completa)
+   ============================================================ */
+.interessados-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+
+.interessados-top .board-title h1 {
+  font-size: 30px;
+  color: #2a2a72;
+  margin-bottom: 6px;
+}
+
+.interessados-sub {
+  font-size: 14px;
+  color: #8a9a98;
+}
+
+.pill-pendentes {
+  background: #ffe11a;
+  color: #2a2a72;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 11px 26px;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+
+.lista-interessados-full {
+  display: flex;
+  flex-direction: column;
+}
+
+.interessado-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 22px 6px;
+  border-bottom: 1px solid #eef3f2;
+}
+
+.interessado-row:last-child {
+  border-bottom: none;
+}
+
+.lista-interessados-full .interessado-avatar {
+  width: 58px;
+  height: 58px;
+  font-size: 19px;
+}
+
+.interessado-dados {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.interessado-dados .interessado-nome {
+  font-size: 18px;
+}
+
+.badge-status {
+  align-self: flex-start;
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 5px 16px;
+  border-radius: 50px;
+}
+
+.badge-status--pendente { background: #ffe11a; color: #2a2a72; }
+.badge-status--aceito   { background: #d7f5e3; color: #1a7a5e; }
+.badge-status--recusado { background: #fde0dd; color: #c0392b; }
+
+.interessado-acoes {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+.interessado-acoes form { margin: 0; }
+
+.btn-aceitar,
+.btn-recusar,
+.btn-reabrir {
+  border-radius: 8px;
+  padding: 12px 34px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: .2s;
+  white-space: nowrap;
+}
+
+.btn-aceitar {
+  background: #1a8a72;
+  color: #fff;
+  border: 1px solid #1a8a72;
+}
+
+.btn-aceitar:hover { background: #15705c; border-color: #15705c; }
+
+.btn-recusar,
+.btn-reabrir {
+  background: #fff;
+  color: #16596a;
+  border: 1px solid #cfe0dd;
+}
+
+.btn-recusar:hover { background: #fde0dd; border-color: #e9a39c; color: #c0392b; }
+.btn-reabrir:hover { background: #1a7a5e; border-color: #1a7a5e; color: #fff; }
+
+@media (max-width: 700px) {
+  .interessado-row {
+    flex-wrap: wrap;
+  }
+
+  .interessado-acoes {
+    width: 100%;
+    justify-content: flex-start;
+    padding-left: 78px;
+  }
+
+  .btn-aceitar,
+  .btn-recusar,
+  .btn-reabrir {
+    flex: 1;
+    padding: 12px 10px;
+  }
+}
+
+/* ============================================================
    MEU PERFIL DO PROFISSIONAL (visualizacao)
    ============================================================ */
 .perfil-page {

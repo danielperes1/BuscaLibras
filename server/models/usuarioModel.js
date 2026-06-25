@@ -171,6 +171,29 @@ module.exports = {
         return linhas
     },
 
+    // Lista todos os interessados de um profissional (com dados do solicitante)
+    listarTodosInteressados: async (id_profissional) => {
+        const query = `
+            SELECT i.id, i.status, i.data_interesse,
+                   s.nome, s.foto, s.cidade, s.estado
+            FROM interesse i
+            JOIN solicitante s ON s.id = i.id_solicitante
+            WHERE i.id_profissional = ?
+            ORDER BY i.data_interesse DESC`
+        const [linhas] = await db.execute(query, [id_profissional])
+        return linhas
+    },
+
+    // Atualiza o status de um interesse (aceito / recusado / pendente),
+    // garantindo que ele pertence ao profissional informado
+    atualizarStatusInteresse: async (id_interesse, id_profissional, status) => {
+        const [resultado] = await db.execute(
+            'UPDATE interesse SET status = ? WHERE id = ? AND id_profissional = ?',
+            [status, id_interesse, id_profissional]
+        )
+        return resultado.affectedRows > 0
+    },
+
     // Lista profissionais e solicitantes com os dados exibidos na dashboard do admin
     listarUsuariosCompletos: async () => {
         const query = `

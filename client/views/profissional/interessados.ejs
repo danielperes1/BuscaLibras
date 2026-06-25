@@ -1,0 +1,75 @@
+<%- include('../partials/head', { titulo: 'Interessados' }) %>
+
+<body class="page-sistema">
+
+  <%- include('../partials/header') %>
+
+  <main class="prof-home">
+    <div class="prof-board">
+
+      <!-- TOPO: titulo + filtro de pendentes -->
+      <div class="interessados-top">
+        <div class="board-title">
+          <h1>Interessados</h1>
+          <p class="interessados-sub">Gerencie os contatos de solicitantes interessados no seu perfil</p>
+        </div>
+
+        <span class="pill-pendentes">Pendentes (<%= pendentes %>)</span>
+      </div>
+
+      <!-- LISTA DE INTERESSADOS -->
+      <div class="lista-interessados-full">
+        <% if (interessados && interessados.length > 0) { %>
+          <% interessados.forEach(function (pessoa) { %>
+            <div class="interessado-row">
+
+              <!-- Avatar -->
+              <span class="interessado-avatar interessado-avatar--iniciais" style="background: <%= pessoa.cor %>;<% if (pessoa.foto) { %>display:none<% } %>"><%= pessoa.iniciais %></span>
+              <% if (pessoa.foto) { %>
+                <img class="interessado-avatar" src="<%= pessoa.foto %>" alt="<%= pessoa.nome %>" onerror="this.previousElementSibling.style.display='flex';this.remove()">
+              <% } %>
+
+              <!-- Dados -->
+              <div class="interessado-dados">
+                <span class="interessado-nome"><%= pessoa.nome %></span>
+                <span class="interessado-local">
+                  <% if (pessoa.cidade) { %><%= pessoa.cidade %><% } %>
+                  <% if (pessoa.cidade && pessoa.estado) { %>&nbsp;&nbsp;<% } %>
+                  <% if (pessoa.estado) { %><%= pessoa.estado %><% } %>
+                </span>
+                <span class="badge-status badge-status--<%= pessoa.status %>">
+                  <%= pessoa.status === 'aceito' ? 'Aceito' : pessoa.status === 'recusado' ? 'Recusado' : 'Pendente' %>
+                </span>
+              </div>
+
+              <!-- Acoes -->
+              <div class="interessado-acoes">
+                <% if (pessoa.status === 'pendente') { %>
+                  <form action="/dashboard/interessados/<%= pessoa.id %>/status" method="POST">
+                    <input type="hidden" name="status" value="aceito">
+                    <button type="submit" class="btn-aceitar">Aceitar</button>
+                  </form>
+                  <form action="/dashboard/interessados/<%= pessoa.id %>/status" method="POST">
+                    <input type="hidden" name="status" value="recusado">
+                    <button type="submit" class="btn-recusar">Recusar</button>
+                  </form>
+                <% } else { %>
+                  <form action="/dashboard/interessados/<%= pessoa.id %>/status" method="POST">
+                    <input type="hidden" name="status" value="pendente">
+                    <button type="submit" class="btn-reabrir">Reabrir</button>
+                  </form>
+                <% } %>
+              </div>
+
+            </div>
+          <% }) %>
+        <% } else { %>
+          <div class="lista-vazia">Você ainda não recebeu interesses.</div>
+        <% } %>
+      </div>
+
+    </div>
+  </main>
+
+</body>
+</html>
