@@ -27,7 +27,7 @@ module.exports = {
             res.cookie('token', token, { httpOnly: true })
 
             if (usuario.perfil === 'administrador') return res.redirect("/usuarios")
-            if (usuario.perfil === 'solicitante') return res.redirect("/profissionais/vitrine")
+            if (usuario.perfil === 'solicitante') return res.redirect("/dashboard-solicitante")
             if (usuario.perfil === 'profissional') return res.redirect("/dashboard/inicio")
 
         } catch (erro) {

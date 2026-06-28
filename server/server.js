@@ -63,7 +63,7 @@ app.get("/cadastro2", (req, res) => {
 });
 
 // ROTA DA HOME DO SOLICITANTE APÓS O LOGIN
-app.get("/profissionais/vitrine", verificarAutenticacao, (req, res) => {
+app.get("/dashboard-solicitante", verificarAutenticacao, (req, res) => {
   res.render("solicitante/home", {
     totalInteresses: 0,
     paginaAtual: "home"
