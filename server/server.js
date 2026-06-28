@@ -19,6 +19,8 @@ app.use(require('cookie-parser')())
 // importa o modulo do dotenv, le o arquivo .env, e ja configura inicialmente
 require('dotenv').config()
 
+const { verificarAutenticacao } = require('./middlewares/authMiddleware.js')
+
 // CONFIGURAÇÃO DO EJS E PASTAS DO FRONT END
 // Define o EJS como engine do front 
 app.set('view engine','ejs')
@@ -58,6 +60,14 @@ app.get("/cadastro", (req, res) => {
 // ROTA QUE RETORNA O CADASTRO DE SOLICITANTE
 app.get("/cadastro2", (req, res) => {
   res.render("auth/cadastro2");
+});
+
+// ROTA DA HOME DO SOLICITANTE APÓS O LOGIN
+app.get("/profissionais/vitrine", verificarAutenticacao, (req, res) => {
+  res.render("solicitante/home", {
+    totalInteresses: 0,
+    paginaAtual: "home"
+  });
 });
 
 //importar as rotas do usuario

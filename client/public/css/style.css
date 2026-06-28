@@ -2111,3 +2111,190 @@ body {
     grid-template-columns: 1fr;
   }
 }
+/* ============================================================
+   HOME DO CLIENTE (SOLICITANTE)
+   ============================================================ */
+.cliente-home {
+  width: 100%;
+}
+
+/* HERO */
+.home-hero {
+  background-image: url('/img/bg-hero.png'); /* imagem de fundo com os ícones */
+  background-size: cover;
+  background-position: center;
+  border-radius: 20px;
+  padding: 40px 32px;
+  margin-bottom: 24px;
+}
+
+.home-hero-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 30px;
+}
+
+/* CARDS BRANCOS */
+.home-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 28px 30px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.home-card--busca {
+  justify-content: space-between;
+}
+
+.home-card--interesses {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* ÍCONE LUPA */
+.home-card-icone {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: #e6f4f2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: #1aa089;
+}
+
+/* ÍCONE CORAÇÃO */
+.home-card-icone--coracao {
+  background: #eaf3fb;
+  color: #3a8fc7;
+  width: 64px;
+  height: 64px;
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.home-card h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #16596a;
+  margin-bottom: 4px;
+}
+
+.home-card p {
+  font-size: 13px;
+  color: #6b7d7a;
+  line-height: 1.5;
+}
+
+.home-card-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #16596a;
+}
+
+.home-card-numero {
+  display: block;
+  font-size: 52px;
+  font-weight: 700;
+  color: #16596a;
+  line-height: 1;
+}
+
+.home-card-sublabel {
+  font-size: 13px;
+  color: #8a9a98;
+}
+
+/* BOTÃO BUSCAR */
+.btn-buscar-prof {
+  display: inline-block;
+  background: #1aa089;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 10px;
+  padding: 12px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  align-self: flex-start;
+  transition: .2s;
+}
+
+.btn-buscar-prof:hover { background: #158975; }
+
+/* SOBRE NÓS */
+.home-sobre {
+  background: #fff;
+  border-radius: 20px;
+  padding: 36px 40px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+
+.home-sobre-titulo {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1aa089;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+
+.home-sobre-subtitulo {
+  font-size: 17px;
+  font-weight: 700;
+  color: #16596a;
+  margin-bottom: 16px;
+}
+
+.home-sobre-texto {
+  font-size: 14px;
+  color: #44514f;
+  line-height: 1.7;
+  max-width: 680px;
+}
+
+@media (max-width: 768px) {
+  .home-hero-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .home-sobre {
+    padding: 26px 22px;
+  }
+}
+
+.home-card-icone img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
+.home-card-icone--coracao img {
+  width: 46px;
+  height: 46px;
+}
+
+.home-sobre-inner {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.home-sobre-texto-wrap {
+  flex: 1;
+}
+
+.home-sobre-imagem {
+  flex-shrink: 0;
+  width: 270px;
+}
+
+.home-sobre-imagem img {
+  width: 250px;
+  height: auto;
+  display: block;
+}

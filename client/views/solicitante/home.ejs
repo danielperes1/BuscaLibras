@@ -1,0 +1,58 @@
+<%- include('../partials/head', { titulo: 'Home' }) %>
+
+<body class="page-sistema">
+
+  <%- include('../partials/header') %>
+
+  <main class="cliente-home">
+
+    <section class="home-hero1">
+      <div class="home-hero-inner">
+
+        <!-- CARD: Encontre um profissional -->
+        <div class="home-card home-card--busca">
+          <div class="home-card-icone">
+            <img src="/img/lupa.png" alt="Buscar" />
+          </div>
+          <div>
+            <h2>Encontre um profissional agora</h2>
+            <p>Ache profissionais certificados de libras pelo Brasil inteiro.</p>
+          </div>
+          <a href="/buscar" class="btn-buscar-prof">Buscar profissionais</a>
+        </div>
+
+        <!-- CARD: Meus interesses -->
+        <div class="home-card home-card--interesses">
+          <div class="home-card-icone home-card-icone--coracao">
+            <img src="/img/coracao.png" alt="Interesses" />
+          </div>
+          <p class="home-card-label">Meus interesses</p>
+          <span class="home-card-numero"><%= totalInteresses %></span>
+          <p class="home-card-sublabel">Profissionais salvos</p>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="home-sobre">
+  <div class="home-sobre-inner">
+    <div class="home-sobre-texto-wrap">
+      <h2 class="home-sobre-titulo">SOBRE NÓS</h2>
+      <h3 class="home-sobre-subtitulo">Conectando pessoas através da Língua Brasileira de Sinais</h3>
+      <p class="home-sobre-texto">
+        O Busca Libras nasceu para aproximar a comunidade surda e ouvinte, facilitando o acesso
+        a intérpretes, professores e profissionais de Libras qualificados em todo o Brasil.
+        Acreditamos que a comunicação é um direito de todos e trabalhamos para tornar esse
+        acesso cada vez mais simples, rápido e confiável.
+      </p>
+    </div>
+    <div class="home-sobre-imagem">
+      <img src="/img/buscalibras.png" alt="Pessoas se comunicando em Libras" />
+    </div>
+  </div>
+</section>
+
+  </main>
+
+</body>
+</html>
