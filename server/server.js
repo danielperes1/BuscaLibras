@@ -19,7 +19,8 @@ app.use(require('cookie-parser')())
 // importa o modulo do dotenv, le o arquivo .env, e ja configura inicialmente
 require('dotenv').config()
 
-const { verificarAutenticacao } = require('./middlewares/authMiddleware.js')
+const { verificarAutenticacao, somenteSolicitante } = require('./middlewares/authMiddleware.js')
+const usuarioController = require('./controllers/usuarioController.js')
 
 // CONFIGURAÇÃO DO EJS E PASTAS DO FRONT END
 // Define o EJS como engine do front 
@@ -63,18 +64,17 @@ app.get("/cadastro2", (req, res) => {
 });
 
 // ROTA DA HOME DO SOLICITANTE APÓS O LOGIN
-app.get("/profissionais/vitrine", verificarAutenticacao, (req, res) => {
-  res.render("solicitante/home", {
-    totalInteresses: 0,
-    paginaAtual: "home"
-  });
-});
+app.get("/profissionais/vitrine", verificarAutenticacao, somenteSolicitante, usuarioController.homeSolicitante);
 
 //importar as rotas do usuario
 const usuariosRoutes = require("./routers/usuarioRouters.js");
 
 // Requisições começando com /usuarios e gerenciada pelo sub-arquivo de rotas
 app.use("/usuarios", usuariosRoutes);
+
+//importar as rotas do solicitante (busca de profissionais e interesses)
+const solicitanteRoutes = require("./routers/solicitanteRouters.js");
+app.use("/", solicitanteRoutes);
 
 //importar as rotas do dashboard do profissional
 const dashboardRoutes = require("./routers/dashboardRouters.js");

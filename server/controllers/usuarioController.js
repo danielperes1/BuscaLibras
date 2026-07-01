@@ -337,6 +337,218 @@ module.exports = {
         }
     },
 
+    // HOME DO SOLICITANTE - vitrine com o total de interesses demonstrados
+    homeSolicitante: async (req, res) => {
+        try {
+            const solicitante = await usuarioModel.buscarSolicitantePorIdUsuario(req.usuario.id)
+            const totalInteresses = solicitante
+                ? await usuarioModel.contarInteressesDoSolicitante(solicitante.id)
+                : 0
+
+            res.render('solicitante/home', {
+                totalInteresses,
+                paginaAtual: 'home'
+            })
+        } catch (erro) {
+            console.error(erro)
+            res.status(500).json({ mensagem: "Erro ao carregar a home do solicitante" })
+        }
+    },
+
+    // PAGINA DE BUSCA DE PROFISSIONAIS (com filtros de texto, area e estado)
+    paginaBuscar: async (req, res) => {
+        try {
+            const q = (req.query.q || '').trim()
+            const area = req.query.area || ''
+            const estado = req.query.estado || ''
+
+            const [profissionaisBrutos, estados] = await Promise.all([
+                usuarioModel.listarProfissionaisFiltrados({ q, area, estado }),
+                usuarioModel.listarEstadosProfissionais()
+            ])
+
+            const coresAvatar = ['#d98a8a', '#8f6fce', '#7ed3a0', '#3a8fc7', '#e0a458', '#ce7fb0']
+            const profissionais = profissionaisBrutos.map((item, i) => {
+                const nome = (item.nome || '').trim()
+                const partesNome = nome.split(/\s+/)
+                const iniciais = ((partesNome[0]?.[0] || '?') + (partesNome[1]?.[0] || '')).toUpperCase()
+                const localizacao = [item.cidade, item.estado].filter(Boolean).join(' - ') || '-'
+                const foto = (item.foto && item.foto.startsWith('/uploads/')) ? item.foto : null
+                return { ...item, iniciais, localizacao, foto, cor: coresAvatar[i % coresAvatar.length] }
+            })
+
+            // Areas de atuacao para os botoes de filtro (valor = ENUM do banco)
+            const areas = [
+                { value: 'Intérprete de Libras', label: 'Intérprete' },
+                { value: 'Guia-Intérprete', label: 'Guia-Intérprete' },
+                { value: 'Tradutor de Libras', label: 'Tradutor' },
+                { value: 'Instrutor de Libras', label: 'Instrutor' }
+            ]
+
+            res.render('solicitante/buscar', {
+                profissionais,
+                estados,
+                areas,
+                filtros: { q, area, estado },
+                paginaAtual: 'buscar'
+            })
+        } catch (erro) {
+            console.error(erro)
+            res.status(500).json({ mensagem: "Erro ao carregar a busca de profissionais" })
+        }
+    },
+
+    // REGISTRA O INTERESSE DO SOLICITANTE EM UM PROFISSIONAL
+    demonstrarInteresse: async (req, res) => {
+        try {
+            const solicitante = await usuarioModel.buscarSolicitantePorIdUsuario(req.usuario.id)
+            if (!solicitante) return res.status(404).json({ mensagem: "Solicitante nao encontrado" })
+
+            await usuarioModel.registrarInteresse(solicitante.id, req.params.id)
+
+            res.redirect(req.get('Referer') || '/buscar')
+        } catch (erro) {
+            console.error(erro)
+            res.status(500).json({ mensagem: "Erro ao registrar o interesse" })
+        }
+    },
+
+    // PAGINA DE INTERESSES - profissionais em que o solicitante demonstrou interesse
+    paginaInteresses: async (req, res) => {
+        try {
+            const solicitante = await usuarioModel.buscarSolicitantePorIdUsuario(req.usuario.id)
+            if (!solicitante) return res.status(404).json({ mensagem: "Solicitante nao encontrado" })
+
+            const brutos = await usuarioModel.listarInteressesDoSolicitante(solicitante.id)
+
+            const coresAvatar = ['#d98a8a', '#8f6fce', '#7ed3a0', '#3a8fc7', '#e0a458', '#ce7fb0']
+            const interesses = brutos.map((item, i) => {
+                const nome = (item.nome || '').trim()
+                const partesNome = nome.split(/\s+/)
+                const iniciais = ((partesNome[0]?.[0] || '?') + (partesNome[1]?.[0] || '')).toUpperCase()
+                const localizacao = [item.cidade, item.estado].filter(Boolean).join(' - ') || '-'
+                const foto = (item.foto && item.foto.startsWith('/uploads/')) ? item.foto : null
+                return { ...item, iniciais, localizacao, foto, cor: coresAvatar[i % coresAvatar.length] }
+            })
+
+            res.render('solicitante/interesses', {
+                interesses,
+                paginaAtual: 'interesses'
+            })
+        } catch (erro) {
+            console.error(erro)
+            res.status(500).json({ mensagem: "Erro ao carregar os interesses" })
+        }
+    },
+
+    // VISUALIZACAO PUBLICA DO PERFIL DE UM PROFISSIONAL (acessada pelo solicitante)
+    verPerfilProfissional: async (req, res) => {
+        try {
+            const perfil = await usuarioModel.buscarProfissionalPorId(req.params.id)
+            if (!perfil) return res.status(404).json({ mensagem: "Profissional nao encontrado" })
+
+            const nome = (perfil.nome || '').trim()
+            const partesNome = nome.split(/\s+/)
+            const iniciais = ((partesNome[0]?.[0] || '?') + (partesNome[1]?.[0] || '')).toUpperCase()
+            const localizacao = [perfil.cidade, perfil.estado].filter(Boolean).join(' - ') || '-'
+            const foto = (perfil.foto && perfil.foto.startsWith('/uploads/')) ? perfil.foto : null
+
+            // Certificados aprovados (credenciais publicas do profissional)
+            const brutos = await usuarioModel.listarCertificadosProfissional(perfil.id)
+            const certificados = brutos
+                .filter(cert => cert.status === 'aprovado')
+                .map(cert => {
+                    const arquivo = (cert.anexo || '').split('/').pop()
+                    const ext = arquivo.split('.').pop().toLowerCase()
+                    return {
+                        ...cert,
+                        arquivo,
+                        isPdf: ext === 'pdf',
+                        dataFormatada: cert.data_envio ? new Date(cert.data_envio).toLocaleDateString('pt-BR') : ''
+                    }
+                })
+
+            res.render('solicitante/perfil-profissional', {
+                perfil,
+                iniciais,
+                localizacao,
+                foto,
+                certificados,
+                paginaAtual: 'buscar'
+            })
+        } catch (erro) {
+            console.error(erro)
+            res.status(500).json({ mensagem: "Erro ao carregar o perfil do profissional" })
+        }
+    },
+
+    // FORMULARIO DE EDICAO DO PERFIL DO SOLICITANTE
+    editarPerfilSolicitante: async (req, res) => {
+        try {
+            const perfil = await usuarioModel.buscarPerfilSolicitante(req.usuario.id)
+            if (!perfil) return res.status(404).json({ mensagem: "Solicitante nao encontrado" })
+
+            const nome = (perfil.nome || '').trim()
+            const partesNome = nome.split(/\s+/)
+            const iniciais = ((partesNome[0]?.[0] || '?') + (partesNome[1]?.[0] || '')).toUpperCase()
+            const foto = (perfil.foto && perfil.foto.startsWith('/uploads/')) ? perfil.foto : null
+
+            // Formata a data para o input type=date (YYYY-MM-DD)
+            let dataNascimento = ''
+            if (perfil.data_de_nascimento) {
+                const d = new Date(perfil.data_de_nascimento)
+                dataNascimento = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+            }
+
+            res.render('solicitante/editar-perfil', {
+                perfil,
+                iniciais,
+                foto,
+                dataNascimento,
+                paginaAtual: 'perfil'
+            })
+        } catch (erro) {
+            console.error(erro)
+            res.status(500).json({ mensagem: "Erro ao carregar a edicao do perfil" })
+        }
+    },
+
+    // SALVA AS ALTERACOES DO PERFIL DO SOLICITANTE
+    atualizarPerfilSolicitanteAcao: async (req, res) => {
+        try {
+            const idUsuario = req.usuario.id
+            const { nome, email, telefone, data_de_nascimento, estado, cidade, senha, confirmar_senha } = req.body
+            const foto = req.file ? `/uploads/usuarios/${req.file.filename}` : null
+
+            // Se trocou o email, garante que ainda nao existe em outra conta
+            if (email) {
+                const existente = await usuarioModel.buscarPorEmail(email)
+                if (existente && existente.id !== idUsuario) {
+                    return res.status(400).json({ mensagem: "Email ja cadastrado em outra conta" })
+                }
+                await usuarioModel.atualizarEmailUsuario(idUsuario, email)
+            }
+
+            // Troca de senha (opcional): so atualiza se preencheu os campos
+            if (senha) {
+                if (senha !== confirmar_senha) {
+                    return res.status(400).json({ mensagem: "As senhas nao coincidem" })
+                }
+                const senhaCriptografada = await bcrypt.hash(senha, 10)
+                await usuarioModel.atualizarSenhaUsuario(idUsuario, senhaCriptografada)
+            }
+
+            await usuarioModel.atualizarPerfilSolicitante(idUsuario, {
+                nome, telefone, data_de_nascimento, estado, cidade, foto
+            })
+
+            res.redirect("/meu-perfil")
+        } catch (erro) {
+            console.error(erro)
+            res.status(500).json({ mensagem: "Erro ao salvar o perfil" })
+        }
+    },
+
     cadastrar: async (req, res) => {
         try {
             const { nome, email, senha, perfil, telefone, data_de_nascimento, pergunta_rec_senha, resposta_rec_senha, area_de_atuacao, estado, cidade } = req.body

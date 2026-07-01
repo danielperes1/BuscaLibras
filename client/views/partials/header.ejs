@@ -17,8 +17,10 @@
         <a href="/meu-perfil" class="nav-link <%= typeof paginaAtual !== 'undefined' && paginaAtual === 'perfil' ? 'active' : '' %>">Meu Perfil</a>
         <a href="/dashboard/interessados" class="nav-link <%= typeof paginaAtual !== 'undefined' && paginaAtual === 'interessados' ? 'active' : '' %>">Interessados</a>
       <% } else if (usuario && usuario.perfil === 'solicitante') { %>
-        <a href="/profissionais/vitrine" class="nav-link">Home</a>
-        <a href="/meu-perfil" class="nav-link">Meu Perfil</a>
+        <a href="/profissionais/vitrine" class="nav-link <%= typeof paginaAtual !== 'undefined' && paginaAtual === 'home' ? 'active' : '' %>">Home</a>
+        <a href="/buscar" class="nav-link <%= typeof paginaAtual !== 'undefined' && paginaAtual === 'buscar' ? 'active' : '' %>">Buscar</a>
+        <a href="/interesses" class="nav-link <%= typeof paginaAtual !== 'undefined' && paginaAtual === 'interesses' ? 'active' : '' %>">Interesses</a>
+        <a href="/meu-perfil" class="nav-link <%= typeof paginaAtual !== 'undefined' && paginaAtual === 'perfil' ? 'active' : '' %>">Meu Perfil</a>
       <% } %>
     </nav>
 

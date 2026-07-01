@@ -28,5 +28,12 @@ module.exports = {
             return res.status(403).json({ mensagem: 'Acesso restrito ao profissional' })
         }
         next()
+    },
+
+    somenteSolicitante: (req, res, next) => {
+        if (req.usuario?.perfil !== 'solicitante') {
+            return res.status(403).json({ mensagem: 'Acesso restrito ao solicitante' })
+        }
+        next()
     }
 }

@@ -111,7 +111,7 @@ INSERT INTO solicitante
 VALUES
 ('João da Silva', '1995-04-12',
  'Qual o nome do seu primeiro pet?', 'Rex',
- 'joao.jpg', LAST_INSERT_ID());
+ '/uploads/usuarios/1779993612365-326368094.png', LAST_INSERT_ID());
 
 
 -- ============================================
@@ -131,7 +131,7 @@ VALUES
  'Intérprete de Libras',
  'Intérprete certificada com mais de 8 anos de experiência em interpretação simultânea e consecutiva. Especializada em eventos corporativos, audiências judiciais e contextos acadêmicos.',
  'Disponível', 'ES', 'Vitória',
- 'maria.jpg', LAST_INSERT_ID()
+ '/uploads/usuarios/1779991184097-869344163.png', LAST_INSERT_ID()
  );
 
 

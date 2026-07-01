@@ -1,0 +1,49 @@
+<%- include('../partials/head', { titulo: 'Meus Interesses' }) %>
+
+<body class="page-sistema">
+
+  <%- include('../partials/header') %>
+
+  <main class="buscar-page">
+    <div class="cliente-board">
+
+      <div class="board-title">
+        <h1>Meus Interesses</h1>
+        <p class="interessados-sub">Profissionais em que você demonstrou interesse</p>
+      </div>
+
+      <div class="resultados-lista">
+        <% if (interesses && interesses.length > 0) { %>
+          <% interesses.forEach(function (p) { %>
+            <div class="resultado-card">
+
+              <span class="resultado-avatar" style="background: <%= p.cor %>;<% if (p.foto) { %>display:none<% } %>"><%= p.iniciais %></span>
+              <% if (p.foto) { %>
+                <img class="resultado-avatar" src="<%= p.foto %>" alt="<%= p.nome %>" onerror="this.previousElementSibling.style.display='flex';this.remove()">
+              <% } %>
+
+              <div class="resultado-info">
+                <span class="resultado-nome"><%= p.nome %></span>
+                <span class="resultado-area"><%= p.area_de_atuacao || 'Profissional de Libras' %></span>
+                <span class="resultado-local"><%= p.localizacao %></span>
+              </div>
+
+              <div class="resultado-acoes">
+                <span class="badge-status badge-status--<%= p.status %>">
+                  <%= p.status === 'aceito' ? 'Aceito' : p.status === 'recusado' ? 'Recusado' : 'Pendente' %>
+                </span>
+                <a href="/profissionais/<%= p.id_profissional %>/perfil" class="btn-ver-perfil">Ver perfil <i class="fa-solid fa-chevron-right"></i></a>
+              </div>
+
+            </div>
+          <% }) %>
+        <% } else { %>
+          <div class="resultados-vazio">Você ainda não demonstrou interesse em nenhum profissional.</div>
+        <% } %>
+      </div>
+
+    </div>
+  </main>
+
+</body>
+</html>

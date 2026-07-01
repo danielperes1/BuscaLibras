@@ -194,6 +194,139 @@ module.exports = {
         return resultado.affectedRows > 0
     },
 
+    // Busca os dados do solicitante a partir do id do usuario logado
+    buscarSolicitantePorIdUsuario: async (id_usuario) => {
+        const [linhas] = await db.execute('SELECT * FROM solicitante WHERE id_usuario = ?', [id_usuario])
+        return linhas[0]
+    },
+
+    // Busca o perfil do solicitante junto com o email da tabela usuarios
+    buscarPerfilSolicitante: async (id_usuario) => {
+        const query = `
+            SELECT s.*, u.email
+            FROM solicitante s
+            JOIN usuarios u ON u.id = s.id_usuario
+            WHERE s.id_usuario = ?`
+        const [linhas] = await db.execute(query, [id_usuario])
+        return linhas[0]
+    },
+
+    // Atualiza os dados do perfil do solicitante
+    atualizarPerfilSolicitante: async (id_usuario, dados) => {
+        const query = `
+            UPDATE solicitante SET
+                nome = ?,
+                telefone = ?,
+                data_de_nascimento = ?,
+                estado = ?,
+                cidade = ?
+                ${dados.foto ? ', foto = ?' : ''}
+            WHERE id_usuario = ?`
+
+        const valores = [
+            dados.nome ?? null,
+            dados.telefone ?? null,
+            dados.data_de_nascimento || null,
+            dados.estado ?? null,
+            dados.cidade ?? null
+        ]
+        if (dados.foto) valores.push(dados.foto)
+        valores.push(id_usuario)
+
+        await db.execute(query, valores)
+    },
+
+    // Atualiza a senha na tabela de login (usuarios)
+    atualizarSenhaUsuario: async (id_usuario, senhaHash) => {
+        await db.execute('UPDATE usuarios SET senha = ? WHERE id = ?', [senhaHash, id_usuario])
+    },
+
+    // Lista profissionais aplicando os filtros da busca (texto, area e estado)
+    listarProfissionaisFiltrados: async ({ q, area, estado }) => {
+        let query = `
+            SELECT p.id, p.nome, p.area_de_atuacao, p.estado, p.cidade, p.foto, p.disponibilidade
+            FROM profissional p
+            WHERE 1 = 1`
+        const params = []
+
+        if (area) {
+            query += ' AND p.area_de_atuacao = ?'
+            params.push(area)
+        }
+        if (estado) {
+            query += ' AND p.estado = ?'
+            params.push(estado)
+        }
+        if (q) {
+            query += ' AND (p.nome LIKE ? OR p.area_de_atuacao LIKE ? OR p.cidade LIKE ?)'
+            const like = `%${q}%`
+            params.push(like, like, like)
+        }
+
+        query += ' ORDER BY p.nome'
+        const [linhas] = await db.execute(query, params)
+        return linhas
+    },
+
+    // Lista os estados distintos que possuem profissionais cadastrados
+    listarEstadosProfissionais: async () => {
+        const [linhas] = await db.execute(
+            `SELECT DISTINCT estado FROM profissional
+             WHERE estado IS NOT NULL AND estado <> ''
+             ORDER BY estado`
+        )
+        return linhas.map(l => l.estado)
+    },
+
+    // Busca um profissional pelo seu id (para visualizacao publica do perfil)
+    buscarProfissionalPorId: async (id) => {
+        const query = `
+            SELECT p.*, u.email
+            FROM profissional p
+            JOIN usuarios u ON u.id = p.id_usuario
+            WHERE p.id = ?`
+        const [linhas] = await db.execute(query, [id])
+        return linhas[0]
+    },
+
+    // Registra o interesse de um solicitante em um profissional (sem duplicar)
+    registrarInteresse: async (id_solicitante, id_profissional) => {
+        const [existe] = await db.execute(
+            'SELECT id FROM interesse WHERE id_solicitante = ? AND id_profissional = ?',
+            [id_solicitante, id_profissional]
+        )
+        if (existe.length) return false
+
+        await db.execute(
+            'INSERT INTO interesse (id_solicitante, id_profissional) VALUES (?, ?)',
+            [id_solicitante, id_profissional]
+        )
+        return true
+    },
+
+    // Lista os interesses demonstrados por um solicitante (com dados do profissional)
+    listarInteressesDoSolicitante: async (id_solicitante) => {
+        const query = `
+            SELECT i.id, i.status, i.data_interesse,
+                   p.id AS id_profissional, p.nome, p.area_de_atuacao,
+                   p.estado, p.cidade, p.foto
+            FROM interesse i
+            JOIN profissional p ON p.id = i.id_profissional
+            WHERE i.id_solicitante = ?
+            ORDER BY i.data_interesse DESC`
+        const [linhas] = await db.execute(query, [id_solicitante])
+        return linhas
+    },
+
+    // Conta o total de interesses demonstrados por um solicitante
+    contarInteressesDoSolicitante: async (id_solicitante) => {
+        const [linhas] = await db.execute(
+            'SELECT COUNT(*) AS total FROM interesse WHERE id_solicitante = ?',
+            [id_solicitante]
+        )
+        return linhas[0].total
+    },
+
     // Lista profissionais e solicitantes com os dados exibidos na dashboard do admin
     listarUsuariosCompletos: async () => {
         const query = `

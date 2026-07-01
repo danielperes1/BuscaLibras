@@ -25,18 +25,15 @@
 
         <!-- COLUNA ESQUERDA -->
         <aside class="editar-card editar-card-lateral">
-          <% if (foto) { %>
-            <img class="editar-avatar" src="<%= foto %>" alt="<%= perfil.nome %>">
-          <% } else { %>
-            <span class="editar-avatar editar-avatar--iniciais"><%= iniciais %></span>
-          <% } %>
+          <img id="avatar-preview" class="editar-avatar" src="<%= foto || '' %>" alt="<%= perfil.nome %>" <% if (!foto) { %>style="display:none"<% } %>>
+          <span id="avatar-iniciais" class="editar-avatar editar-avatar--iniciais" <% if (foto) { %>style="display:none"<% } %>><%= iniciais %></span>
 
           <h2 class="editar-nome"><%= perfil.nome %></h2>
 
           <label class="btn-upload">
             <i class="fa-solid fa-image"></i>
             <span>Alterar foto<small>JPG ou PNG, até 5MB</small></span>
-            <input type="file" name="foto" accept="image/png, image/jpeg" hidden>
+            <input type="file" name="foto" accept="image/png, image/jpeg" hidden onchange="previewFoto(this)">
           </label>
 
           <div class="editar-divisor"></div>
@@ -123,6 +120,20 @@
     const contador = document.getElementById('contador');
     const atualizar = () => contador.textContent = sobre.value.length;
     if (sobre) { atualizar(); sobre.addEventListener('input', atualizar); }
+
+    function previewFoto(input) {
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = document.getElementById('avatar-preview');
+          const ini = document.getElementById('avatar-iniciais');
+          img.src = e.target.result;
+          img.style.display = 'block';
+          if (ini) ini.style.display = 'none';
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
   </script>
 
 </body>

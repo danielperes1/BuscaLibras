@@ -1,0 +1,124 @@
+<%- include('../partials/head', { titulo: 'Meu Perfil' }) %>
+
+<body class="page-sistema">
+
+  <%- include('../partials/header') %>
+
+  <main class="editar-page">
+    <form class="editar-form" action="/meu-perfil/solicitante" method="POST" enctype="multipart/form-data">
+
+      <!-- TOPO -->
+      <div class="editar-topbar">
+        <div class="editar-titulo">
+          <h1>Editar perfil</h1>
+          <p>Mantenha suas informações sempre atualizadas</p>
+        </div>
+      </div>
+
+      <div class="editar-grid">
+
+        <!-- COLUNA ESQUERDA -->
+        <aside class="editar-card editar-card-lateral">
+          <img id="avatar-preview" class="editar-avatar" src="<%= foto || '' %>" alt="<%= perfil.nome %>" <% if (!foto) { %>style="display:none"<% } %>>
+          <span id="avatar-iniciais" class="editar-avatar editar-avatar--iniciais" <% if (foto) { %>style="display:none"<% } %>><%= iniciais %></span>
+
+          <h2 class="editar-nome"><%= perfil.nome %></h2>
+
+          <label class="btn-upload">
+            <i class="fa-solid fa-camera"></i>
+            <span>Alterar foto<small>JPG ou PNG, até 5MB</small></span>
+            <input type="file" name="foto" accept="image/png, image/jpeg" hidden onchange="previewFoto(this)">
+          </label>
+
+          <div class="editar-divisor"></div>
+
+          <div class="dica-seguranca">
+            <i class="fa-solid fa-shield-halved"></i>
+            <div>
+              <span class="dica-titulo">Dica de Segurança</span>
+              <p class="dica-texto">Mantenha seus dados sempre atualizados para garantir a segurança da sua conta.</p>
+            </div>
+          </div>
+        </aside>
+
+        <!-- COLUNA DIREITA -->
+        <section class="editar-card editar-card-dados">
+          <h3 class="editar-secao-titulo"><i class="fa-solid fa-id-card"></i> Dados pessoais</h3>
+
+          <div class="editar-campos">
+            <div class="campo">
+              <label for="nome">Nome completo</label>
+              <input type="text" id="nome" name="nome" value="<%= perfil.nome || '' %>" required>
+            </div>
+
+            <div class="campo">
+              <label for="data">Data de nascimento</label>
+              <input type="date" id="data" name="data_de_nascimento" value="<%= dataNascimento %>">
+            </div>
+
+            <div class="campo">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" value="<%= perfil.email || '' %>" required>
+            </div>
+
+            <div class="campo">
+              <label for="telefone">Telefone</label>
+              <input type="text" id="telefone" name="telefone" value="<%= perfil.telefone || '' %>">
+            </div>
+
+            <div class="campo">
+              <label for="estado">Estado</label>
+              <input type="text" id="estado" name="estado" value="<%= perfil.estado || '' %>">
+            </div>
+
+            <div class="campo">
+              <label for="cidade">Cidade</label>
+              <input type="text" id="cidade" name="cidade" value="<%= perfil.cidade || '' %>">
+            </div>
+          </div>
+
+          <div class="editar-divisor"></div>
+
+          <h3 class="editar-secao-titulo"><i class="fa-solid fa-lock"></i> Segurança</h3>
+
+          <div class="editar-campos">
+            <div class="campo">
+              <label for="senha">Nova senha</label>
+              <input type="password" id="senha" name="senha" placeholder="Digite sua nova senha" autocomplete="new-password">
+            </div>
+
+            <div class="campo">
+              <label for="confirmar_senha">Confirmar senha</label>
+              <input type="password" id="confirmar_senha" name="confirmar_senha" placeholder="Confirme sua nova senha" autocomplete="new-password">
+            </div>
+          </div>
+
+          <div class="editar-rodape">
+            <a href="/profissionais/vitrine" class="btn-claro">Cancelar</a>
+            <button type="submit" class="btn-salvar">Salvar alterações</button>
+          </div>
+        </section>
+
+      </div>
+
+    </form>
+  </main>
+
+  <script>
+    function previewFoto(input) {
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = document.getElementById('avatar-preview');
+          const ini = document.getElementById('avatar-iniciais');
+          img.src = e.target.result;
+          img.style.display = 'block';
+          if (ini) ini.style.display = 'none';
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+  </script>
+
+</body>
+</html>

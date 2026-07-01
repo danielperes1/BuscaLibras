@@ -1,0 +1,87 @@
+<%- include('../partials/head', { titulo: perfil.nome }) %>
+
+<body class="page-sistema">
+
+  <%- include('../partials/header') %>
+
+  <main class="perfil-page">
+    <div class="cliente-board">
+
+    <a href="/buscar" class="perfil-voltar"><i class="fa-solid fa-arrow-left-long"></i> Voltar para tela de Resultados</a>
+
+    <div class="perfil-layout">
+
+      <!-- COLUNA ESQUERDA: cartao do profissional -->
+      <aside class="perfil-cartao">
+        <span class="perfil-avatar" <% if (foto) { %>style="display:none"<% } %>><%= iniciais %></span>
+        <% if (foto) { %>
+          <img class="perfil-avatar" src="<%= foto %>" alt="<%= perfil.nome %>" onerror="this.previousElementSibling.style.display='flex';this.remove()">
+        <% } %>
+
+        <h1 class="perfil-nome"><%= perfil.nome %></h1>
+        <span class="perfil-area"><%= perfil.area_de_atuacao || 'Profissional de Libras' %></span>
+
+        <div class="perfil-contato">
+          <div class="perfil-contato-linha">
+            <span class="perfil-local"><%= localizacao %></span>
+            <% if (perfil.telefone) { %><span class="perfil-tel"><%= perfil.telefone %></span><% } %>
+          </div>
+          <span class="perfil-email"><%= perfil.email %></span>
+        </div>
+
+        <form method="POST" action="/interesses/<%= perfil.id %>">
+          <button type="submit" class="btn-interesse btn-interesse--full">Tenho interesse</button>
+        </form>
+
+        <div class="perfil-cartao-divisor"></div>
+
+        <% if (perfil.disponibilidade) { %>
+          <span class="perfil-disp perfil-disp--<%= perfil.disponibilidade === 'Disponível' ? 'on' : 'off' %>"><%= perfil.disponibilidade %></span>
+        <% } %>
+      </aside>
+
+      <!-- COLUNA DIREITA: sobre + certificacoes -->
+      <div class="perfil-conteudo">
+
+        <section class="perfil-box">
+          <h2 class="perfil-box-titulo">Sobre o profissional</h2>
+          <p class="perfil-sobre-texto"><%= perfil.sobre || 'Este profissional ainda não adicionou uma descrição.' %></p>
+        </section>
+
+        <section class="perfil-box">
+          <div class="perfil-cert-header">
+            <img src="/img/icons/profissionais.svg" alt="" class="perfil-cert-selo" onerror="this.style.display='none'">
+            <h2 class="perfil-box-titulo">Certificações e credenciais</h2>
+          </div>
+
+          <% if (certificados && certificados.length > 0) { %>
+            <div class="perfil-cert-lista">
+              <% certificados.forEach(function (cert) { %>
+                <div class="perfil-cert-card">
+                  <div class="perfil-cert-info">
+                    <i class="fa-solid <%= cert.isPdf ? 'fa-file-pdf' : 'fa-certificate' %> perfil-cert-icone"></i>
+                    <div>
+                      <span class="perfil-cert-titulo"><%= cert.titulo %></span>
+                      <% if (cert.dataFormatada) { %><span class="perfil-cert-data">Enviado em <%= cert.dataFormatada %></span><% } %>
+                    </div>
+                  </div>
+                  <a href="<%= cert.anexo %>" target="_blank" class="perfil-cert-download" title="Abrir certificado">
+                    <i class="fa-solid fa-download"></i>
+                  </a>
+                </div>
+              <% }) %>
+            </div>
+          <% } else { %>
+            <p class="perfil-cert-vazio">Este profissional ainda não possui certificações verificadas.</p>
+          <% } %>
+        </section>
+
+      </div>
+
+    </div>
+
+    </div>
+  </main>
+
+</body>
+</html>

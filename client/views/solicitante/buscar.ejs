@@ -1,0 +1,101 @@
+<%- include('../partials/head', { titulo: 'Buscar Profissionais' }) %>
+
+<body class="page-sistema">
+
+  <%- include('../partials/header') %>
+
+  <main class="buscar-page">
+    <div class="cliente-board">
+
+    <div class="buscar-titulo">
+      <h1>Buscar Profissionais</h1>
+      <p>Encontre o profissional de libras ideal para você</p>
+    </div>
+
+    <!-- Um unico form GET preserva texto, area e estado ao filtrar -->
+    <form method="GET" action="/buscar" class="buscar-layout">
+
+      <!-- SIDEBAR DE FILTROS -->
+      <aside class="buscar-filtros">
+        <h2 class="filtros-titulo">Filtros</h2>
+
+        <span class="filtros-label">Tipo de profissional</span>
+        <div class="filtros-tipos">
+          <label class="filtro-tipo <%= filtros.area === '' ? 'active' : '' %>">
+            <input type="radio" name="area" value="" <%= filtros.area === '' ? 'checked' : '' %>>
+            <span>Todos</span>
+          </label>
+          <% areas.forEach(function (a) { %>
+            <label class="filtro-tipo <%= filtros.area === a.value ? 'active' : '' %>">
+              <input type="radio" name="area" value="<%= a.value %>" <%= filtros.area === a.value ? 'checked' : '' %>>
+              <span><%= a.label %></span>
+            </label>
+          <% }) %>
+        </div>
+
+        <span class="filtros-label">Estado:</span>
+        <select name="estado" class="filtros-select">
+          <option value="">Todos</option>
+          <% estados.forEach(function (uf) { %>
+            <option value="<%= uf %>" <%= filtros.estado === uf ? 'selected' : '' %>><%= uf %></option>
+          <% }) %>
+        </select>
+
+        <button type="submit" class="btn-aplicar-filtros">Aplicar filtros</button>
+      </aside>
+
+      <!-- PAINEL DE RESULTADOS -->
+      <section class="buscar-resultados">
+
+        <div class="buscar-barra">
+          <input type="text" name="q" value="<%= filtros.q %>" placeholder="Nome, especialidade ou cidade" class="buscar-input">
+          <button type="submit" class="btn-buscar">Buscar</button>
+        </div>
+
+        <div class="resultados-header">
+          <h3>
+            Resultados
+            <% if (filtros.q || filtros.estado || filtros.area) { %>
+              para: <span><%= filtros.q || filtros.estado || filtros.area %></span>
+            <% } %>
+          </h3>
+          <span class="resultados-contagem"><%= profissionais.length %> Resultado<%= profissionais.length === 1 ? '' : 's' %> encontrado<%= profissionais.length === 1 ? '' : 's' %></span>
+        </div>
+
+        <div class="resultados-lista">
+          <% if (profissionais && profissionais.length > 0) { %>
+            <% profissionais.forEach(function (p) { %>
+              <div class="resultado-card">
+
+                <span class="resultado-avatar" style="background: <%= p.cor %>;<% if (p.foto) { %>display:none<% } %>"><%= p.iniciais %></span>
+                <% if (p.foto) { %>
+                  <img class="resultado-avatar" src="<%= p.foto %>" alt="<%= p.nome %>" onerror="this.previousElementSibling.style.display='flex';this.remove()">
+                <% } %>
+
+                <div class="resultado-info">
+                  <span class="resultado-nome"><%= p.nome %></span>
+                  <span class="resultado-area"><%= p.area_de_atuacao || 'Profissional de Libras' %></span>
+                  <span class="resultado-local"><%= p.localizacao %></span>
+                </div>
+
+                <div class="resultado-acoes">
+                  <button type="submit" formmethod="post" formaction="/interesses/<%= p.id %>" class="btn-interesse">Tenho interesse</button>
+                  <a href="/profissionais/<%= p.id %>/perfil" class="btn-ver-perfil">Ver perfil <i class="fa-solid fa-chevron-right"></i></a>
+                </div>
+
+              </div>
+            <% }) %>
+          <% } else { %>
+            <div class="resultados-vazio">Nenhum profissional encontrado com esses filtros.</div>
+          <% } %>
+        </div>
+
+      </section>
+
+    </form>
+
+    </div>
+  </main>
+
+</body>
+</html>
